@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_anime/features/anime_detail/bloc/anime_detail_event.dart';
 import 'package:flutter_anime/features/anime_detail/bloc/anime_detail_state.dart';
+import 'package:flutter_anime/features/anime_detail/models/anime_detail_model.dart';
+import 'package:flutter_anime/features/episode_detail/screens/episode_detail_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/anime_detail_bloc.dart';
 
@@ -26,7 +28,9 @@ class AnimeDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Poster Anime
                   Image.network(animeDetail.poster),
+                  // Judul Anime
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
@@ -34,6 +38,7 @@ class AnimeDetailScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  // Informasi Anime
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text('Japanese: ${animeDetail.japanese}'),
@@ -62,6 +67,7 @@ class AnimeDetailScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text('Studios: ${animeDetail.studios}'),
                   ),
+                  // Synopsis
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
@@ -73,6 +79,15 @@ class AnimeDetailScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(animeDetail.synopsis.paragraphs.join('\n\n')),
                   ),
+                  // Daftar Episode
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Episodes',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  _buildEpisodeList(animeDetail.episodeList),
                 ],
               ),
             );
@@ -82,6 +97,26 @@ class AnimeDetailScreen extends StatelessWidget {
           return Container();
         },
       ),
+    );
+  }
+
+  // Widget untuk menampilkan daftar episode
+  Widget _buildEpisodeList(List<Episode> episodeList) {
+    return ListView.builder(
+      shrinkWrap: true, // Agar ListView tidak mengambil seluruh ruang
+      physics: NeverScrollableScrollPhysics(), // Non-scrollable karena sudah di dalam SingleChildScrollView
+      itemCount: episodeList.length,
+      itemBuilder: (context, index) {
+        final episode = episodeList[index];
+        return ListTile(
+          title: Text('Episode ${episode.title}'),
+          subtitle: Text(episode.episodeId),
+          onTap: () {
+            // Navigasi ke halaman detail episode (jika diperlukan)
+             Navigator.push(context, MaterialPageRoute(builder: (context) => EpisodeDetailScreen(episodeId: episode.episodeId)));
+          },
+        );
+      },
     );
   }
 }

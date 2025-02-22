@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_anime/features/anime/bloc/anime_bloc.dart';
 import 'package:flutter_anime/features/anime/repositories/anime_repository.dart';
 import 'package:flutter_anime/features/anime/screens/home_screen.dart';
+import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_bloc.dart';
+import 'package:flutter_anime/features/episode_detail/repositories/episode_detail_repository.dart';
+import 'package:flutter_anime/features/episode_detail/services/episode_detail_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/anime/services/anime_service.dart';
 import 'features/anime_detail/bloc/anime_detail_bloc.dart'; // Import BLoC detail
@@ -21,7 +24,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AnimeBloc(
             animeRepository: AnimeRepository(
-              animeService: AnimeService(baseUrl: 'http://localhost:3001/otakudesu'),
+              animeService:
+                  AnimeService(baseUrl: 'http://localhost:3001/otakudesu'),
             ),
           ),
         ),
@@ -29,7 +33,16 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AnimeDetailBloc(
             animeDetailRepository: AnimeDetailRepository(
-              animeDetailService: AnimeDetailService(baseUrl: 'http://localhost:3001/otakudesu'),
+              animeDetailService: AnimeDetailService(
+                  baseUrl: 'http://localhost:3001/otakudesu'),
+            ),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => EpisodeDetailBloc(
+            episodeDetailRepository: EpisodeDetailRepository(
+              episodeDetailService: EpisodeDetailService(
+                  baseUrl: 'http://localhost:3001/otakudesu'),
             ),
           ),
         ),
