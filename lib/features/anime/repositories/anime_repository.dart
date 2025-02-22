@@ -1,5 +1,5 @@
-import 'package:flutter_anime/models/anime_model.dart';
-import 'package:flutter_anime/services/anime_service.dart';
+import 'package:flutter_anime/features/anime/models/anime_model.dart';
+import 'package:flutter_anime/features/anime/services/anime_service.dart';
 
 class AnimeRepository {
   final AnimeService animeService;

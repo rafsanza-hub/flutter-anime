@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_anime/models/anime_model.dart';
+import 'package:flutter_anime/features/anime/models/anime_model.dart';
 import 'package:http/http.dart' as http;
 
 class AnimeService {
@@ -9,7 +9,7 @@ class AnimeService {
 
   Future<List<Anime>> getAnimes() async {
     final response = await http.get(Uri.parse('$baseUrl/home'));
-    print(response.body);
+   
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);

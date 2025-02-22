@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/blocs/anime/anime_bloc.dart';
+import 'package:flutter_anime/features/anime/bloc/anime_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/anime_model.dart';
+import 'package:flutter_anime/features/anime_detail/screens/anime_detail_screen.dart'; // Import halaman detail
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -26,20 +27,18 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       'Ongoing Anime',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  _buildAnimeList(ongoingAnimeList),
+                  _buildAnimeList(ongoingAnimeList, context),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
                       'Completed Anime',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  _buildAnimeList(completedAnimeList),
+                  _buildAnimeList(completedAnimeList, context),
                 ],
               ),
             );
@@ -59,7 +58,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAnimeList(List<Anime> animeList) {
+  Widget _buildAnimeList(List<Anime> animeList, BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -71,7 +70,15 @@ class HomeScreen extends StatelessWidget {
           title: Text(anime.title),
           subtitle: Text(
               'Episode: ${anime.episodes} | Rilis: ${anime.latestReleaseDate}'),
-          onTap: () {},
+          onTap: () {
+            // Navigasi ke halaman detail anime
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AnimeDetailScreen(animeId: anime.animeId),
+              ),
+            );
+          },
         );
       },
     );

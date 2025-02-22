@@ -1,9 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bloc/bloc.dart';
-import 'package:flutter_anime/models/anime_model.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_anime/features/anime/models/anime_model.dart';
 
-import 'package:flutter_anime/repositories/anime_repository.dart';
+import 'package:flutter_anime/features/anime/repositories/anime_repository.dart';
 
 part 'anime_event.dart';
 part 'anime_state.dart';
