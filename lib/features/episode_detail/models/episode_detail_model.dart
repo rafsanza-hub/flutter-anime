@@ -31,7 +31,7 @@ class EpisodeDetail {
   final String title;
   final String animeId;
   final String releaseTime;
-  final String defaultStreamingUrl;
+   String defaultStreamingUrl;
   final bool hasPrevEpisode;
   final EpisodeNavigation? prevEpisode;
   final bool hasNextEpisode;

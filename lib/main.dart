@@ -7,9 +7,9 @@ import 'package:flutter_anime/features/episode_detail/repositories/episode_detai
 import 'package:flutter_anime/features/episode_detail/services/episode_detail_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/anime/services/anime_service.dart';
-import 'features/anime_detail/bloc/anime_detail_bloc.dart'; // Import BLoC detail
-import 'features/anime_detail/repositories/anime_detail_repository.dart'; // Import repository detail
-import 'features/anime_detail/services/anime_detail_service.dart'; // Import service detail
+import 'features/anime_detail/bloc/anime_detail_bloc.dart';
+import 'features/anime_detail/repositories/anime_detail_repository.dart';
+import 'features/anime_detail/services/anime_detail_service.dart'; 
 
 void main() {
   runApp(MyApp());
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           create: (context) => AnimeBloc(
             animeRepository: AnimeRepository(
               animeService:
-                  AnimeService(baseUrl: 'http://localhost:3001/otakudesu'),
+                  AnimeService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
             ),
           ),
         ),
@@ -33,8 +33,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AnimeDetailBloc(
             animeDetailRepository: AnimeDetailRepository(
-              animeDetailService: AnimeDetailService(
-                  baseUrl: 'http://localhost:3001/otakudesu'),
+              animeDetailService:
+                  AnimeDetailService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
             ),
           ),
         ),
@@ -42,16 +42,14 @@ class MyApp extends StatelessWidget {
           create: (context) => EpisodeDetailBloc(
             episodeDetailRepository: EpisodeDetailRepository(
               episodeDetailService: EpisodeDetailService(
-                  baseUrl: 'http://localhost:3001/otakudesu'),
+                  baseUrl: 'http://10.0.2.2:3001/otakudesu'),
             ),
           ),
         ),
       ],
       child: MaterialApp(
         title: 'Anime App',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        theme: ThemeData.dark(),
         home: HomeScreen(),
       ),
     );
