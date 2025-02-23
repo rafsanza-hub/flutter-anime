@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_anime/features/anime/bloc/anime_bloc.dart';
 import 'package:flutter_anime/features/anime/repositories/anime_repository.dart';
-import 'package:flutter_anime/features/anime/screens/home_screen.dart';
+import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_bloc.dart';
+import 'package:flutter_anime/features/anime_by_genre/repositories/anime_genre_repository.dart';
+import 'package:flutter_anime/features/anime_by_genre/services/anime_genre_service.dart';
 import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_bloc.dart';
 import 'package:flutter_anime/features/episode_detail/repositories/episode_detail_repository.dart';
 import 'package:flutter_anime/features/episode_detail/services/episode_detail_service.dart';
@@ -58,6 +60,13 @@ class MyApp extends StatelessWidget {
                   GenreService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
             ),
           )..add(FetchGenres()),
+        ),
+        BlocProvider(
+          create: (context) => AnimeGenreBloc(
+            animeGenreRepository: AnimeGenreRepository(
+              animeGenreService: AnimeGenreService(),
+            ),
+          ),
         ),
       ],
       child: MaterialApp(

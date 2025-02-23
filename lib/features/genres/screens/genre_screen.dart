@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_anime/features/anime_by_genre/screens/anime_genre_screen.dart';
 import 'package:flutter_anime/features/genres/bloc/genre_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/genre_bloc.dart';
@@ -19,9 +20,18 @@ class GenreScreen extends StatelessWidget {
                 spacing: 8.0, // Jarak antar chip horizontal
                 runSpacing: 8.0, // Jarak antar chip vertikal
                 children: state.genres.map((genre) {
-                  return Chip(
-                    label: Text(genre.title),
-                    // backgroundColor: Colors.blue.shade200,
+                  return GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AnimeGenreScreen(genreId: genre.genreId),
+                      ),
+                    ),
+                    child: Chip(
+                      label: Text(genre.title),
+                      // backgroundColor: Colors.blue.shade200,
+                    ),
                   );
                 }).toList(),
               ),
