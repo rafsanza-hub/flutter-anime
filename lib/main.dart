@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_anime/features/anime/bloc/anime_bloc.dart';
 import 'package:flutter_anime/features/anime/repositories/anime_repository.dart';
+import 'package:flutter_anime/features/anime/screens/home_screen.dart';
 import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_bloc.dart';
 import 'package:flutter_anime/features/anime_by_genre/repositories/anime_genre_repository.dart';
 import 'package:flutter_anime/features/anime_by_genre/services/anime_genre_service.dart';
@@ -72,7 +73,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Anime App',
         theme: ThemeData.dark(),
-        home: GenreScreen(),
+        home: HomeScreen(),
       ),
     );
   }
