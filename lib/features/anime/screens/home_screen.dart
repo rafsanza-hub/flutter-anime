@@ -57,8 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (state is AnimeErrorState) {
                   return Center(child: Text(state.message));
                 } else {
-                  return const Center(
-                      child: Text('Tekan tombol untuk memuat data'));
+                  return const Center(child: Text('Ada Kesalahan'));
                 }
               },
             ),
@@ -71,12 +70,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.read<AnimeBloc>().add(FetchAnimeEvent());
-        },
-        child: const Icon(Icons.refresh),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     context.read<AnimeBloc>().add(FetchAnimeEvent());
+      //   },
+      //   child: const Icon(Icons.refresh),
+      // ),
     );
   }
 }
@@ -103,7 +102,7 @@ class BottomNavigation extends StatelessWidget {
           children: tabBarIcons
               .map((e) => Icon(e,
                   color: e == Icons.home ? Colors.white : Colors.white54,
-                  size: 25))
+                  size: 30))
               .toList(),
         ),
       ),

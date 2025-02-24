@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
               animeService:
                   AnimeService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
             ),
-          ),
+          )..add(FetchAnimeEvent()),
         ),
         // BLoC untuk halaman detail
         BlocProvider(
