@@ -28,12 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (state is AnimeLoadingState) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is AnimeLoadedState) {
-                  final ongoingAnimeList = state.animeList
-                      .where((anime) => anime.episodes < 10)
-                      .toList();
-                  final completedAnimeList = state.animeList
-                      .where((anime) => anime.episodes < 10)
-                      .toList();
+                  final ongoingAnimeList = state.animeList.ongoing;
+                  final completedAnimeList = state.animeList.completed;
+                  // print(ongoingAnimeList);
 
                   return SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
@@ -277,7 +274,7 @@ class HeaderSection extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          _buildProfileAvatar(),
+          // _buildProfileAvatar(),
         ],
       ),
     );

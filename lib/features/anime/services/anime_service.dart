@@ -7,20 +7,24 @@ class AnimeService {
 
   AnimeService({required this.baseUrl});
 
-  Future<List<Anime>> getAnimes() async {
-    final response = await http.get(Uri.parse('$baseUrl/home'));
-   
+  Future<AnimeList> getAnimes() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/home'));
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> jsonData = jsonDecode(response.body);
-
-      // ongoing
-      final List<dynamic> ongoingAnimeList = jsonData['data']['ongoing']['animeList'];
-
-      // Konversi ke List<Anime>
-      return ongoingAnimeList.map((item) => Anime.fromJson(item)).toList();
-    } else {
-      throw Exception('Gagal memuat data: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        try {
+          final Map<String, dynamic> jsonData = jsonDecode(response.body);
+          return AnimeList.fromJson(jsonData);
+        } catch (e) {
+          throw Exception('Format JSON tidak sesuai: $e');
+        }
+      } else {
+        throw Exception(
+            'Gagal memuat data. Status Code: ${response.statusCode}\nBody: ${response.body}');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Terjadi kesalahan saat memuat data: $e');
     }
   }
 }

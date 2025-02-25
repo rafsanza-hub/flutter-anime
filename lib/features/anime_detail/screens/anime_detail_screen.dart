@@ -8,7 +8,7 @@ import '../bloc/anime_detail_event.dart';
 import '../models/anime_detail_model.dart';
 import '../../episode_detail/screens/episode_detail_screen.dart';
 
-class AnimeDetailScreen extends StatelessWidget {
+class AnimeDetailScreen extends StatefulWidget {
   final String animeId;
 
   const AnimeDetailScreen({
@@ -17,10 +17,19 @@ class AnimeDetailScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<AnimeDetailScreen> createState() => _AnimeDetailScreenState();
+}
+
+class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
+  @override
+  void initState() {
+    context.read<AnimeDetailBloc>().add(FetchAnimeDetail(widget.animeId));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Add this line to fetch the anime details
-    context.read<AnimeDetailBloc>().add(FetchAnimeDetail(animeId));
-
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: BlocBuilder<AnimeDetailBloc, AnimeDetailState>(
@@ -66,7 +75,7 @@ class AnimeDetailScreen extends StatelessWidget {
           ),
         ),
         _buildCloseButton(context),
-        _buildWatchButton(context),
+        _buildWatchButton(context, anime.episodeList.first.episodeId),
       ],
     );
   }
@@ -296,13 +305,13 @@ class AnimeDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWatchButton(BuildContext context) {
+  Widget _buildWatchButton(BuildContext context, String episode) {
     return Positioned(
       left: 30,
       right: 30,
       bottom: 30,
       child: GestureDetector(
-        onTap: () => _navigateToEpisode(context, '1'),
+        onTap: () => _navigateToEpisode(context, episode),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Container(

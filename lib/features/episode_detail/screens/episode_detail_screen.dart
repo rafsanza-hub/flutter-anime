@@ -1,195 +1,246 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_bloc.dart';
-import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_event.dart';
-import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_state.dart';
+import 'package:flutter_anime/features/anime_detail/models/anime_detail_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/episode_detail_model.dart'; // Sesuaikan dengan path model Anda
-import '../widgets/video_player_widget.dart'; // Widget untuk video player
+import '../../../utils/colors.dart';
+import '../bloc/episode_detail_bloc_bloc.dart';
+import '../bloc/episode_detail_bloc_event.dart';
+import '../bloc/episode_detail_bloc_state.dart';
+import '../models/episode_detail_model.dart';
+import '../widgets/video_player_widget.dart';
 
-class EpisodeDetailScreen extends StatelessWidget {
+class EpisodeDetailScreen extends StatefulWidget {
   final String episodeId;
 
-  const EpisodeDetailScreen({required this.episodeId, Key? key}) : super(key: key);
+  const EpisodeDetailScreen({
+    required this.episodeId,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<EpisodeDetailScreen> createState() => _EpisodeDetailScreenState();
+}
+
+class _EpisodeDetailScreenState extends State<EpisodeDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<EpisodeDetailBloc>().add(FetchEpisodeDetail(widget.episodeId));
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Trigger event untuk memuat data episode
-    context.read<EpisodeDetailBloc>().add(FetchEpisodeDetail(episodeId));
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Episode Detail'),
-      ),
+      backgroundColor: kBackgroundColor,
       body: BlocBuilder<EpisodeDetailBloc, EpisodeDetailState>(
         builder: (context, state) {
-          if (state is EpisodeDetailLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is EpisodeDetailLoaded) {
-            final episodeDetail = state.episodeDetail.data;
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Video Player
-                  VideoPlayerWidget(videoUrl: episodeDetail.defaultStreamingUrl),
-
-                  const SizedBox(height: 16),
-
-                  // Judul Episode
-                  Text(
-                    episodeDetail.title,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Informasi Dasar
-                  _buildInfoSection(episodeDetail),
-
-                  const SizedBox(height: 16),
-
-                  // Server Streaming
-                  _buildServerSection(episodeDetail.server),
-
-                  const SizedBox(height: 16),
-
-                  // Link Download
-                  _buildDownloadSection(episodeDetail.downloadUrl),
-
-                  const SizedBox(height: 16),
-
-                  // Info Tambahan
-                  _buildAdditionalInfoSection(episodeDetail.info),
-                ],
+          return switch (state) {
+            EpisodeDetailLoading() => const Center(
+                child: CircularProgressIndicator(),
               ),
-            );
-          } else if (state is EpisodeDetailError) {
-            return Center(child: Text(state.message));
-          }
-          return Container();
+            EpisodeDetailLoaded() =>
+              _buildContent(context, state.episodeDetail.data),
+            EpisodeDetailError() => Center(
+                child: Text(state.message),
+              ),
+            _ => const SizedBox.shrink(),
+          };
         },
       ),
     );
   }
 
-  // Widget untuk menampilkan informasi dasar
-  Widget _buildInfoSection(EpisodeDetail episodeDetail) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildContent(BuildContext context, EpisodeDetail episode) {
+    return Stack(
       children: [
-        Text('Anime ID: ${episodeDetail.animeId}'),
-        Text('Release Time: ${episodeDetail.releaseTime}'),
-        Text('Default Streaming URL: ${episodeDetail.defaultStreamingUrl}'),
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildVideoPlayer(episode.defaultStreamingUrl),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTitleSection(episode),
+                    _buildInfoTags(episode),
+                    _buildEpisodeInfo(episode.info),
+                    _buildEpisodesList(context, episode.info.episodeList),
+                    const SizedBox(height: 100),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        // _buildCloseButton(context),
       ],
     );
   }
 
-  // Widget untuk menampilkan server streaming
-  Widget _buildServerSection(Server server) {
+  Widget _buildVideoPlayer(String videoUrl) {
+    return SizedBox(
+      width: double.infinity,
+      height: 300,
+      child: VideoPlayerWidget(videoUrl: videoUrl),
+    );
+  }
+
+  Widget _buildTitleSection(EpisodeDetail episode) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            episode.title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Anime ID: ${episode.animeId}',
+            style: const TextStyle(
+              color: Colors.white38,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoTags(EpisodeDetail episode) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          _buildTag(episode.info.type),
+          const SizedBox(width: 10),
+          _buildTag(episode.info.duration),
+          const SizedBox(width: 10),
+          ...episode.info.genreList
+              .map((genre) => _buildTag(genre.title))
+              .expand((widget) => [widget, const SizedBox(width: 10)]),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTag(String title) {
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      decoration: BoxDecoration(
+        color: kSearchbarColor,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white30,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEpisodeInfo(EpisodeInfo info) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Streaming Servers',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        ...server.qualities.map((quality) {
-          return ExpansionTile(
-            title: Text(quality.title),
-            children: quality.serverList.map((serverItem) {
-              return ListTile(
-                title: Text(serverItem.title),
-                subtitle: Text('Server ID: ${serverItem.serverId}'),
-                onTap: () {
-                  // Tambahkan logika untuk membuka server
-                },
-              );
-            }).toList(),
-          );
-        }).toList(),
+        const SizedBox(height: 20),
+        _buildInfoItem('Credit', info.credit),
+        _buildInfoItem('Encoder', info.encoder),
+        _buildInfoItem('Release', info.duration),
       ],
     );
   }
 
-  // Widget untuk menampilkan link download
-  Widget _buildDownloadSection(DownloadUrl downloadUrl) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Download Links',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  Widget _buildInfoItem(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        '$label: $value',
+        style: const TextStyle(
+          color: Colors.white54,
+          fontSize: 14,
         ),
-        const SizedBox(height: 8),
-        ...downloadUrl.qualities.map((quality) {
-          return ExpansionTile(
-            title: Text('${quality.title} (${quality.size})'),
-            children: quality.urls.map((link) {
-              return ListTile(
-                title: Text(link.title),
-                subtitle: Text(link.url),
-                onTap: () {
-                  // Tambahkan logika untuk membuka link download
-                },
-              );
-            }).toList(),
-          );
-        }).toList(),
-      ],
+      ),
     );
   }
 
-  // Widget untuk menampilkan info tambahan
-  Widget _buildAdditionalInfoSection(EpisodeInfo info) {
+  Widget _buildEpisodesList(
+      BuildContext context, List<EpisodeNavigation> episodes) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Additional Info',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        const Padding(
+          padding: EdgeInsets.only(top: 20),
+          child: Text(
+            'Episodes',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
-        const SizedBox(height: 8),
-        Text('Credit: ${info.credit}'),
-        Text('Encoder: ${info.encoder}'),
-        Text('Duration: ${info.duration}'),
-        Text('Type: ${info.type}'),
-        const SizedBox(height: 16),
-
-        // Daftar Genre
-        const Text(
-          'Genres',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Wrap(
-          spacing: 8,
-          children: info.genreList.map((genre) {
-            return Chip(
-              label: Text(genre.title),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: episodes.length,
+          itemBuilder: (context, index) {
+            final episode = episodes[index];
+            return ListTile(
+              title: Text(
+                'Episode ${episode.title}',
+                style: const TextStyle(color: Colors.white),
+              ),
+              subtitle: Text(
+                episode.episodeId,
+                style: const TextStyle(color: Colors.white54),
+              ),
+              trailing:
+                  const Icon(Icons.play_circle_outline, color: kButtonColor),
+              onTap: () => _navigateToEpisode(context, episode.episodeId),
             );
-          }).toList(),
+          },
         ),
-        const SizedBox(height: 16),
-
-        // Daftar Episode
-        const Text(
-          'Episode List',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        ...info.episodeList.map((episode) {
-          return ListTile(
-            title: Text('Episode ${episode.title}'),
-            subtitle: Text(episode.episodeId),
-            onTap: () {
-              // Tambahkan logika untuk navigasi ke episode lain
-            },
-          );
-        }).toList(),
       ],
+    );
+  }
+
+  Widget _buildCloseButton(BuildContext context) {
+    return Positioned(
+      top: 60,
+      left: 20,
+      child: Container(
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white24,
+        ),
+        child: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(
+            Icons.close_rounded,
+            color: Colors.white,
+            size: 20,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _navigateToEpisode(BuildContext context, String episodeId) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EpisodeDetailScreen(episodeId: episodeId),
+      ),
     );
   }
 }

@@ -6,14 +6,15 @@ class AnimeRepository {
 
   AnimeRepository({required this.animeService});
 
-  Future<List<Anime>> getAnimes() async {
+  Future<AnimeList> getAnimes() async {
     try {
       final data = await animeService.getAnimes();
+      print(data);
 
-      if (data.isEmpty) {
+      if (data.completed.isEmpty && data.ongoing.isEmpty) {
         throw Exception("Data Kosong");
       }
-      
+
       return data;
     } catch (e) {
       throw Exception(e.toString());

@@ -6,9 +6,9 @@ class CustomCardThumbnail extends StatelessWidget {
   final Anime anime;
 
   const CustomCardThumbnail({
-    Key? key,
+    super.key,
     required this.anime,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

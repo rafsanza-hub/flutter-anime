@@ -7,7 +7,7 @@ class AnimeInitial extends AnimeState {}
 class AnimeLoadingState extends AnimeState {}
 
 class AnimeLoadedState extends AnimeState {
-  final List<Anime> animeList;
+  final AnimeList animeList;
   AnimeLoadedState({required this.animeList});
 }
 
