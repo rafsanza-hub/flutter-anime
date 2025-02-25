@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/genres/screens/genre_screen.dart';
+import 'package:flutter_anime/features/genre/screens/genre_screen.dart';
 import '../../../utils/colors.dart';
 
 class BottomNavigation extends StatefulWidget {

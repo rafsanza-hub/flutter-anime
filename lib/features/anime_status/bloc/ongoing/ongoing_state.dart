@@ -7,7 +7,7 @@ class OngoingInitial extends OngoingState {}
 class OngoingLoadingState extends OngoingState {}
 
 class OngoingLoadedState extends OngoingState {
-  final OngoingAnimeResponse ongoingAnimeResponse;
+  final StatusAnimeResponse ongoingAnimeResponse;
 
   OngoingLoadedState({required this.ongoingAnimeResponse});
 }

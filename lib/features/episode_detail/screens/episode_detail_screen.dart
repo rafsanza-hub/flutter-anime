@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/anime_detail/models/anime_detail_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utils/colors.dart';
 import '../bloc/episode_detail_bloc_bloc.dart';

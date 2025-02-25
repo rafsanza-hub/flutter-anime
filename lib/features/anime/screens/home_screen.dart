@@ -4,7 +4,8 @@ import 'package:flutter_anime/features/anime/models/anime_model.dart';
 import 'package:flutter_anime/features/anime/widgets/custom_card_normal.dart';
 import 'package:flutter_anime/features/anime/widgets/persegi_card.dart';
 import 'package:flutter_anime/features/anime_detail/screens/anime_detail_screen.dart';
-import 'package:flutter_anime/features/ongoing/screens/ongoing_screen.dart';
+import 'package:flutter_anime/features/anime_status/screens/completed_screen.dart';
+import 'package:flutter_anime/features/anime_status/screens/ongoing_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utils/colors.dart';
 import '../../anime/bloc/anime_bloc.dart';
@@ -158,7 +159,7 @@ class AnimeCardsSection extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (title == "Ongoing")
                         ? (context) => const MoreOngoingScreen()
-                        : (context) => const MoreOngoingScreen()),
+                        : (context) => const MoreCompletedScreen()),
               );
             },
             child: const Text(

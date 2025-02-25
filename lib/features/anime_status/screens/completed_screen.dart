@@ -1,50 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/ongoing/bloc/ongoing_bloc.dart'; // Impor widget baru
-import 'package:flutter_anime/features/ongoing/widgets/card_ongoing.dart';
+import 'package:flutter_anime/features/anime_detail/screens/anime_detail_screen.dart';
+import 'package:flutter_anime/features/anime_status/bloc/completed/completed_bloc.dart';
+import 'package:flutter_anime/features/anime_status/widgets/completed_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MoreOngoingScreen extends StatefulWidget {
-  const MoreOngoingScreen({super.key});
+class MoreCompletedScreen extends StatefulWidget {
+  const MoreCompletedScreen({super.key});
 
   @override
-  State<MoreOngoingScreen> createState() => _MoreOngoingScreenState();
+  State<MoreCompletedScreen> createState() => _MoreCompletedScreenState();
 }
 
-class _MoreOngoingScreenState extends State<MoreOngoingScreen> {
+class _MoreCompletedScreenState extends State<MoreCompletedScreen> {
   int currentPage = 1;
 
   @override
   void initState() {
     super.initState();
-    context.read<OngoingBloc>().add(FetchOngoingAnimeEvent(page: currentPage));
+    context.read<CompletedBloc>().add(FetchCompletedAnimeEvent(page: currentPage));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('More Ongoing Anime'),
+        title: const Text('More Completed Anime'),
       ),
-      body: BlocBuilder<OngoingBloc, OngoingState>(
+      body: BlocBuilder<CompletedBloc, CompletedState>(
         builder: (context, state) {
-          if (state is OngoingLoadingState) {
+          if (state is CompletedLoadingState) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is OngoingLoadedState) {
-            final ongoingAnimeList = state.ongoingAnimeResponse.animeList;
-            final pagination = state.ongoingAnimeResponse.pagination;
+          } else if (state is CompletedLoadedState) {
+            final completedAnimeList = state.completedAnimeResponse.animeList;
+            final pagination = state.completedAnimeResponse.pagination;
 
             return Column(
               children: [
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16), // Padding untuk ListView
-                    itemCount: ongoingAnimeList.length,
+                    itemCount: completedAnimeList.length,
                     itemBuilder: (context, index) {
-                      final anime = ongoingAnimeList[index];
+                      final anime = completedAnimeList[index];
                       return Padding(
                         padding: const EdgeInsets.only(
                             bottom: 8), // Margin bawah antar item
-                        child: OngoingCard(anime: anime), // Gunakan widget baru
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AnimeDetailScreen(animeId: anime.animeId),
+                                ),
+                              );
+                            },
+                            child: CompletedCard(
+                              anime: anime,
+                            )), // Gunakan widget baru
                       );
                     },
                   ),
@@ -61,8 +74,8 @@ class _MoreOngoingScreenState extends State<MoreOngoingScreen> {
                               setState(() {
                                 currentPage = pagination.prevPage!;
                               });
-                              context.read<OngoingBloc>().add(
-                                  FetchOngoingAnimeEvent(page: currentPage));
+                              context.read<CompletedBloc>().add(
+                                  FetchCompletedAnimeEvent(page: currentPage));
                             },
                             child: const Text('Previous'),
                           ),
@@ -72,8 +85,8 @@ class _MoreOngoingScreenState extends State<MoreOngoingScreen> {
                               setState(() {
                                 currentPage = pagination.nextPage!;
                               });
-                              context.read<OngoingBloc>().add(
-                                  FetchOngoingAnimeEvent(page: currentPage));
+                              context.read<CompletedBloc>().add(
+                                  FetchCompletedAnimeEvent(page: currentPage));
                             },
                             child: const Text('Next'),
                           ),
@@ -82,7 +95,7 @@ class _MoreOngoingScreenState extends State<MoreOngoingScreen> {
                   ),
               ],
             );
-          } else if (state is OngoingErrorState) {
+          } else if (state is CompletedErrorState) {
             return Center(child: Text(state.message));
           } else {
             return const Center(child: Text('Ada Kesalahan'));

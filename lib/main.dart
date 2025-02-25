@@ -5,18 +5,18 @@ import 'package:flutter_anime/features/anime/screens/home_screen.dart';
 import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_bloc.dart';
 import 'package:flutter_anime/features/anime_by_genre/repositories/anime_genre_repository.dart';
 import 'package:flutter_anime/features/anime_by_genre/services/anime_genre_service.dart';
+import 'package:flutter_anime/features/anime_status/bloc/completed/completed_bloc.dart';
 import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_bloc.dart';
 import 'package:flutter_anime/features/episode_detail/repositories/episode_detail_repository.dart';
 import 'package:flutter_anime/features/episode_detail/services/episode_detail_service.dart';
-import 'package:flutter_anime/features/genres/bloc/genre_bloc.dart';
-import 'package:flutter_anime/features/genres/bloc/genre_event.dart';
-import 'package:flutter_anime/features/genres/repositories/genre_repository.dart';
-import 'package:flutter_anime/features/genres/screens/genre_screen.dart';
-import 'package:flutter_anime/features/genres/services/genre_service.dart';
-import 'package:flutter_anime/features/ongoing/bloc/ongoing_bloc.dart';
-import 'package:flutter_anime/features/ongoing/repositories/ongoing_repository.dart';
-import 'package:flutter_anime/features/ongoing/screens/ongoing_screen.dart';
-import 'package:flutter_anime/features/ongoing/services/ongoing_service.dart';
+import 'package:flutter_anime/features/genre/bloc/genre_bloc.dart';
+import 'package:flutter_anime/features/genre/bloc/genre_event.dart';
+import 'package:flutter_anime/features/genre/repositories/genre_repository.dart';
+import 'package:flutter_anime/features/genre/services/genre_service.dart';
+import 'package:flutter_anime/features/anime_status/bloc/ongoing/ongoing_bloc.dart';
+import 'package:flutter_anime/features/anime_status/repositories/ongoing_repository.dart';
+import 'package:flutter_anime/features/anime_status/screens/ongoing_screen.dart';
+import 'package:flutter_anime/features/anime_status/services/ongoing_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/anime/services/anime_service.dart';
 import 'features/anime_detail/bloc/anime_detail_bloc.dart';
@@ -74,13 +74,23 @@ class MyApp extends StatelessWidget {
           ),
         ),
         BlocProvider(
-  create: (context) => OngoingBloc(
-    ongoingRepository: OngoingRepository(
-      animeService: OngoingService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
-    ),
-  ),
-  // child: const MoreOngoingScreen(),
-),
+          create: (context) => OngoingBloc(
+            ongoingRepository: OngoingRepository(
+              animeService:
+                  StatusService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
+            ),
+          ),
+          // child: const MoreOngoingScreen(),
+        ),
+        BlocProvider(
+          create: (context) => CompletedBloc(
+            completedRepository: OngoingRepository(
+              animeService:
+                  StatusService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
+            ),
+          ),
+          // child: const MoreOngoingScreen(),
+        ),
       ],
       child: MaterialApp(
         title: 'Anime App',

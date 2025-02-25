@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_anime/features/anime_by_genre/screens/anime_genre_screen.dart';
-import 'package:flutter_anime/features/genres/bloc/genre_state.dart';
+import 'package:flutter_anime/features/genre/bloc/genre_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/genre_bloc.dart';
 

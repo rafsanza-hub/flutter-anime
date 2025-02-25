@@ -42,15 +42,17 @@ abstract class Anime {
 
 // Class untuk anime yang masih ongoing
 class OngoingAnime extends Anime {
-  final String releaseDay;
-  final String latestReleaseDate;
+  final String? releaseDay;
+  final String? latestReleaseDate;
+  final String? lastReleaseDate;
 
   OngoingAnime({
     required super.title,
     required super.poster,
     required super.episodes,
-    required this.releaseDay,
-    required this.latestReleaseDate,
+    this.releaseDay,
+    this.latestReleaseDate,
+    required this.lastReleaseDate,
     required super.animeId,
     required super.href,
     required super.otakudesuUrl,
@@ -64,6 +66,7 @@ class OngoingAnime extends Anime {
       episodes: json['episodes'],
       releaseDay: json['releaseDay'],
       latestReleaseDate: json['latestReleaseDate'],
+      lastReleaseDate: json['lastReleaseDate'],
       animeId: json['animeId'],
       href: json['href'],
       otakudesuUrl: json['otakudesuUrl'],

@@ -1,16 +1,16 @@
 import 'package:flutter_anime/features/anime/models/anime_model.dart';
 
-class OngoingAnimeResponse {
+class StatusAnimeResponse {
   final List<OngoingAnime> animeList;
   final Pagination pagination;
 
-  OngoingAnimeResponse({
+  StatusAnimeResponse({
     required this.animeList,
     required this.pagination,
   });
 
-  factory OngoingAnimeResponse.fromJson(Map<String, dynamic> json) {
-    return OngoingAnimeResponse(
+  factory StatusAnimeResponse.fromJson(Map<String, dynamic> json) {
+    return StatusAnimeResponse(
       animeList: (json['data']['animeList'] as List)
           .map((item) => OngoingAnime.fromJson(item))
           .toList(),
