@@ -17,11 +17,11 @@ class CustomCardNormal extends StatelessWidget {
         Container(
           height: 200,
           width: 140,
-          margin: const EdgeInsets.symmetric(horizontal: 8),
+          margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
-              image: NetworkImage(anime.poster), // Menggunakan poster dari API
+              image: NetworkImage(anime.poster), // poster
               fit: BoxFit.cover,
             ),
           ),
@@ -76,7 +76,8 @@ class CustomCardNormal extends StatelessWidget {
               fontSize: 14,
               fontWeight: FontWeight.bold,
               shadows: [
-                Shadow(offset: Offset(0, 1), blurRadius: 3.0, color: Colors.black),
+                Shadow(
+                    offset: Offset(0, 1), blurRadius: 3.0, color: Colors.black),
               ],
             ),
           ),

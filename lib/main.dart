@@ -13,6 +13,10 @@ import 'package:flutter_anime/features/genres/bloc/genre_event.dart';
 import 'package:flutter_anime/features/genres/repositories/genre_repository.dart';
 import 'package:flutter_anime/features/genres/screens/genre_screen.dart';
 import 'package:flutter_anime/features/genres/services/genre_service.dart';
+import 'package:flutter_anime/features/ongoing/bloc/ongoing_bloc.dart';
+import 'package:flutter_anime/features/ongoing/repositories/ongoing_repository.dart';
+import 'package:flutter_anime/features/ongoing/screens/ongoing_screen.dart';
+import 'package:flutter_anime/features/ongoing/services/ongoing_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/anime/services/anime_service.dart';
 import 'features/anime_detail/bloc/anime_detail_bloc.dart';
@@ -69,6 +73,14 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        BlocProvider(
+  create: (context) => OngoingBloc(
+    ongoingRepository: OngoingRepository(
+      animeService: OngoingService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
+    ),
+  ),
+  // child: const MoreOngoingScreen(),
+),
       ],
       child: MaterialApp(
         title: 'Anime App',

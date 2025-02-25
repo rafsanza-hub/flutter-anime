@@ -4,6 +4,7 @@ import 'package:flutter_anime/features/anime/models/anime_model.dart';
 import 'package:flutter_anime/features/anime/widgets/custom_card_normal.dart';
 import 'package:flutter_anime/features/anime/widgets/persegi_card.dart';
 import 'package:flutter_anime/features/anime_detail/screens/anime_detail_screen.dart';
+import 'package:flutter_anime/features/ongoing/screens/ongoing_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utils/colors.dart';
 import '../../anime/bloc/anime_bloc.dart';
@@ -122,12 +123,12 @@ class AnimeCardsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle("Ongoing"),
+        _buildSectionTitle(context, "Ongoing"),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: _buildAnimeListHorizontal(context, ongoingAnime),
         ),
-        _buildSectionTitle("Completed"),
+        _buildSectionTitle(context, "Completed"),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: _buildAnimeGrid(context, completedAnime),
@@ -136,7 +137,7 @@ class AnimeCardsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       child: Row(
@@ -150,12 +151,23 @@ class AnimeCardsSection extends StatelessWidget {
               fontWeight: FontWeight.w300,
             ),
           ),
-          const Text(
-            "See all",
-            style: TextStyle(
-              color: kButtonColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w300,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (title == "Ongoing")
+                        ? (context) => const MoreOngoingScreen()
+                        : (context) => const MoreOngoingScreen()),
+              );
+            },
+            child: const Text(
+              "See all",
+              style: TextStyle(
+                color: kButtonColor,
+                fontSize: 17,
+                fontWeight: FontWeight.w300,
+              ),
             ),
           ),
         ],
