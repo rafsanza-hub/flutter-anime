@@ -17,6 +17,7 @@ import 'package:flutter_anime/features/anime_status/bloc/ongoing/ongoing_bloc.da
 import 'package:flutter_anime/features/anime_status/repositories/ongoing_repository.dart';
 import 'package:flutter_anime/features/anime_status/screens/ongoing_screen.dart';
 import 'package:flutter_anime/features/anime_status/services/ongoing_service.dart';
+import 'package:flutter_anime/features/main/screens/main_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/anime/services/anime_service.dart';
 import 'features/anime_detail/bloc/anime_detail_bloc.dart';
@@ -95,7 +96,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Anime App',
         theme: ThemeData.dark(),
-        home: HomeScreen(),
+        home: MainScreen(),
       ),
     );
   }

@@ -22,87 +22,40 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackgroundColor,
-      body: Stack(
-        children: [
-          SafeArea(
-            child: BlocBuilder<AnimeBloc, AnimeState>(
-              builder: (context, state) {
-                if (state is AnimeLoadingState) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is AnimeLoadedState) {
-                  final ongoingAnimeList = state.animeList.ongoing;
-                  final completedAnimeList = state.animeList.completed;
-                  // print(ongoingAnimeList);
+      body: SafeArea(
+        child: BlocBuilder<AnimeBloc, AnimeState>(
+          builder: (context, state) {
+            if (state is AnimeLoadingState) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is AnimeLoadedState) {
+              final ongoingAnimeList = state.animeList.ongoing;
+              final completedAnimeList = state.animeList.completed;
 
-                  return SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const HeaderSection(),
-                        const SizedBox(height: 20),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: SearchSection(),
-                        ),
-                        const SizedBox(height: 20),
-                        AnimeCardsSection(
-                          ongoingAnime: ongoingAnimeList,
-                          completedAnime: completedAnimeList,
-                        ),
-                      ],
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const HeaderSection(),
+                    const SizedBox(height: 20),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: SearchSection(),
                     ),
-                  );
-                } else if (state is AnimeErrorState) {
-                  return Center(child: Text(state.message));
-                } else {
-                  return const Center(child: Text('Ada Kesalahan'));
-                }
-              },
-            ),
-          ),
-          const Positioned(
-            bottom: 30,
-            left: 25,
-            right: 25,
-            child: BottomNavigation(),
-          ),
-        ],
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     context.read<AnimeBloc>().add(FetchAnimeEvent());
-      //   },
-      //   child: const Icon(Icons.refresh),
-      // ),
-    );
-  }
-}
-
-class BottomNavigation extends StatelessWidget {
-  const BottomNavigation({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final List<IconData> tabBarIcons = [
-      Icons.home,
-      Icons.search,
-      Icons.favorite,
-      Icons.person,
-    ];
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        color: kSearchbarColor.withOpacity(0.9),
-        height: 80,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: tabBarIcons
-              .map((e) => Icon(e,
-                  color: e == Icons.home ? Colors.white : Colors.white54,
-                  size: 30))
-              .toList(),
+                    const SizedBox(height: 20),
+                    AnimeCardsSection(
+                      ongoingAnime: ongoingAnimeList,
+                      completedAnime: completedAnimeList,
+                    ),
+                  ],
+                ),
+              );
+            } else if (state is AnimeErrorState) {
+              return Center(child: Text(state.message));
+            } else {
+              return const Center(child: Text('Ada Kesalahan'));
+            }
+          },
         ),
       ),
     );
