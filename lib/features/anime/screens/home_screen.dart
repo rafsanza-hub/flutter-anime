@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ongoingAnime: ongoingAnimeList,
                       completedAnime: completedAnimeList,
                     ),
+                    const SizedBox(height: 100),
                   ],
                 ),
               );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_anime/features/anime_by_genre/screens/anime_genre_screen.dart';
 import 'package:flutter_anime/features/genre/bloc/genre_state.dart';
+import 'package:flutter_anime/utils/colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/genre_bloc.dart';
 
@@ -28,10 +29,7 @@ class GenreScreen extends StatelessWidget {
                             AnimeGenreScreen(genreId: genre.genreId),
                       ),
                     ),
-                    child: Chip(
-                      label: Text(genre.title),
-                      // backgroundColor: Colors.blue.shade200,
-                    ),
+                    child: _buildTag(genre.title),
                   );
                 }).toList(),
               ),
@@ -41,6 +39,24 @@ class GenreScreen extends StatelessWidget {
           }
           return Center(child: Text('Tidak ada data.'));
         },
+      ),
+    );
+  }
+
+  Widget _buildTag(String title) {
+    return Container(
+      // margin: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      decoration: BoxDecoration(
+        color: kSearchbarColor,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white30,
+          fontSize: 16,
+        ),
       ),
     );
   }
