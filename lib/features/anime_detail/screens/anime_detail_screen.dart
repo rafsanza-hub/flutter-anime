@@ -75,7 +75,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
           ),
         ),
         _buildCloseButton(context),
-        _buildWatchButton(context, anime.episodeList.first.episodeId),
+        _buildWatchButton(context, anime.episodeList.last.episodeId),
       ],
     );
   }
@@ -291,7 +291,7 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       child: Container(
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white24,
+          color: Colors.black38,
         ),
         child: IconButton(
           onPressed: () => Navigator.pop(context),

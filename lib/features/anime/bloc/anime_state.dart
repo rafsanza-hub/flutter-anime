@@ -15,3 +15,9 @@ class AnimeErrorState extends AnimeState {
   final String message;
   AnimeErrorState({required this.message});
 }
+
+
+class AnimeSearchLoadedState extends AnimeState {
+  final List<Anime> searchResults;
+  AnimeSearchLoadedState({required this.searchResults});
+}

@@ -13,7 +13,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  // Daftar halaman yang akan ditampilkan sesuai dengan pilihan bottom navigation
   final List<Widget> _pages = [
     const HomeScreen(),
     GenreScreen(),
@@ -37,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          _pages[_selectedIndex], // Tampilkan halaman yang dipilih
+          _pages[_selectedIndex], 
           Positioned(
             bottom: 30,
             left: 25,

@@ -20,4 +20,13 @@ class AnimeRepository {
       throw Exception(e.toString());
     }
   }
+
+  Future<List<Anime>> searchAnimes(String query) async {
+    try {
+      final data = await animeService.searchAnimes(query);
+      return data;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

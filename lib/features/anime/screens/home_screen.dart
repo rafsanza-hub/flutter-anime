@@ -1,4 +1,6 @@
 // lib/features/home/screens/home_screen.dart
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_anime/features/anime/models/anime_model.dart';
 import 'package:flutter_anime/features/anime/widgets/custom_card_normal.dart';
@@ -18,6 +20,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Timer? _debounce;
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      context.read<AnimeBloc>().add(SearchAnimeEvent(query: query));
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,39 +42,120 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: BlocBuilder<AnimeBloc, AnimeState>(
           builder: (context, state) {
-            if (state is AnimeLoadingState) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is AnimeLoadedState) {
-              final ongoingAnimeList = state.animeList.ongoing;
-              final completedAnimeList = state.animeList.completed;
-
-              return SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const HeaderSection(),
-                    const SizedBox(height: 20),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 30),
-                      child: SearchSection(),
-                    ),
-                    const SizedBox(height: 20),
-                    AnimeCardsSection(
-                      ongoingAnime: ongoingAnimeList,
-                      completedAnime: completedAnimeList,
-                    ),
-                    const SizedBox(height: 100),
-                  ],
+            return Column(
+              children: [
+                const HeaderSection(),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: SearchSection(onSearchChanged: _onSearchChanged),
                 ),
-              );
-            } else if (state is AnimeErrorState) {
-              return Center(child: Text(state.message));
-            } else {
-              return const Center(child: Text('Ada Kesalahan'));
-            }
+                const SizedBox(height: 20),
+                Expanded(
+                  child: _buildContent(state),
+                ),
+              ],
+            );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildContent(AnimeState state) {
+    if (state is AnimeLoadingState) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is AnimeLoadedState) {
+      return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            AnimeCardsSection(
+              ongoingAnime: state.animeList.ongoing,
+              completedAnime: state.animeList.completed,
+            ),
+            const SizedBox(height: 100),
+          ],
+        ),
+      );
+    } else if (state is AnimeSearchLoadedState) {
+      return GridView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        physics: const BouncingScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.7,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+        itemCount: state.searchResults.length,
+        itemBuilder: (context, index) {
+          final anime = state.searchResults[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AnimeDetailScreen(animeId: anime.animeId),
+                ),
+              );
+            },
+            child: PersegiCard(anime: anime),
+          );
+        },
+      );
+    } else if (state is AnimeErrorState) {
+      return Center(child: Text(state.message));
+    }
+    return const Center(child: Text('Ada Kesalahan'));
+  }
+}
+
+class SearchSection extends StatelessWidget {
+  final Function(String) onSearchChanged;
+
+  const SearchSection({
+    Key? key,
+    required this.onSearchChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      decoration: BoxDecoration(
+        color: kSearchbarColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.search_rounded,
+            color: Colors.white30,
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: TextField(
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w300,
+              ),
+              decoration: const InputDecoration(
+                hintText: "Search anime",
+                hintStyle: TextStyle(
+                  color: Colors.white54,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+              ),
+              onChanged: onSearchChanged,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -191,8 +289,8 @@ class AnimeCardsSection extends StatelessWidget {
   }
 }
 
-class SearchSection extends StatelessWidget {
-  const SearchSection({super.key});
+class SearchSections extends StatelessWidget {
+  const SearchSections({super.key});
 
   @override
   Widget build(BuildContext context) {

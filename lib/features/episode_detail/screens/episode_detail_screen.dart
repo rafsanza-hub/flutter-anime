@@ -62,7 +62,7 @@ class _EpisodeDetailScreenState extends State<EpisodeDetailScreen> {
                   children: [
                     _buildTitleSection(episode),
                     _buildInfoTags(episode),
-                    _buildEpisodeInfo(episode.info),
+                    _buildEpisodeInfo(episode),
                     _buildEpisodesList(context, episode.info.episodeList),
                     const SizedBox(height: 100),
                   ],
@@ -147,14 +147,14 @@ class _EpisodeDetailScreenState extends State<EpisodeDetailScreen> {
     );
   }
 
-  Widget _buildEpisodeInfo(EpisodeInfo info) {
+  Widget _buildEpisodeInfo(EpisodeDetail info) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
-        _buildInfoItem('Credit', info.credit),
-        _buildInfoItem('Encoder', info.encoder),
-        _buildInfoItem('Release', info.duration),
+        _buildInfoItem('tes link cui', info.defaultStreamingUrl),
+        _buildInfoItem('Waktu Rilis', info.releaseTime),
+        _buildInfoItem('Durasi', info.info.duration),
       ],
     );
   }

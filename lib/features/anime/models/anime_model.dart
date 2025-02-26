@@ -1,3 +1,5 @@
+import 'package:flutter_anime/features/anime/models/genre_model.dart';
+
 class AnimeList {
   final List<OngoingAnime> ongoing;
   final List<CompletedAnime> completed;
@@ -109,5 +111,38 @@ class CompletedAnime extends Anime {
 
   static List<CompletedAnime> listFromJson(List<dynamic> json) {
     return json.map((anime) => CompletedAnime.fromJson(anime)).toList();
+  }
+}
+
+
+
+class SearchAnime extends Anime {
+  final String status;
+  final List<Genre> genreList;
+
+  SearchAnime({
+    required super.title,
+    required super.poster,
+    required this.status,
+    required super.animeId,
+    required super.href,
+    required super.otakudesuUrl,
+    required this.genreList,
+    super.score,
+  }) : super(episodes: 0); 
+
+  factory SearchAnime.fromJson(Map<String, dynamic> json) {
+    return SearchAnime(
+      title: json['title'],
+      poster: json['poster'],
+      status: json['status'],
+      animeId: json['animeId'],
+      href: json['href'],
+      otakudesuUrl: json['otakudesuUrl'],
+      score: json['score'],
+      genreList: (json['genreList'] as List)
+          .map((genre) => Genre.fromJson(genre))
+          .toList(),
+    );
   }
 }

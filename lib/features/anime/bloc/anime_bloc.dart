@@ -13,6 +13,7 @@ class AnimeBloc extends Bloc<AnimeEvent, AnimeState> {
     required this.animeRepository,
   }) : super(AnimeInitial()) {
     on<FetchAnimeEvent>(_onFetchAnime);
+    on<SearchAnimeEvent>(_onSearchAnime);
   }
 
   _onFetchAnime(FetchAnimeEvent event, Emitter<AnimeState> emit) async {
@@ -20,6 +21,21 @@ class AnimeBloc extends Bloc<AnimeEvent, AnimeState> {
     try {
       final animeList = await animeRepository.getAnimes();
       emit(AnimeLoadedState(animeList: animeList));
+    } catch (e) {
+      emit(AnimeErrorState(message: e.toString()));
+    }
+  }
+
+   _onSearchAnime(SearchAnimeEvent event, Emitter<AnimeState> emit) async {
+    emit(AnimeLoadingState());
+    try {
+      if (event.query.isEmpty) {
+        final animeList = await animeRepository.getAnimes();
+        emit(AnimeLoadedState(animeList: animeList));
+      } else {
+        final searchResults = await animeRepository.searchAnimes(event.query);
+        emit(AnimeSearchLoadedState(searchResults: searchResults));
+      }
     } catch (e) {
       emit(AnimeErrorState(message: e.toString()));
     }

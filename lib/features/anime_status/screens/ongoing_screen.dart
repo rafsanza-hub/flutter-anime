@@ -24,7 +24,7 @@ class _MoreOngoingScreenState extends State<MoreOngoingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('More Ongoing Anime'),
+        title: const Text('Lagi ongoing'),
       ),
       body: BlocBuilder<OngoingBloc, OngoingState>(
         builder: (context, state) {
@@ -38,13 +38,12 @@ class _MoreOngoingScreenState extends State<MoreOngoingScreen> {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    padding: const EdgeInsets.all(16), // Padding untuk ListView
+                    padding: const EdgeInsets.all(16),
                     itemCount: ongoingAnimeList.length,
                     itemBuilder: (context, index) {
                       final anime = ongoingAnimeList[index];
                       return Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 8), // Margin bawah antar item
+                        padding: const EdgeInsets.only(bottom: 8),
                         child: GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -57,7 +56,7 @@ class _MoreOngoingScreenState extends State<MoreOngoingScreen> {
                             },
                             child: OngoingCard(
                               anime: anime,
-                            )), // Gunakan widget baru
+                            )),
                       );
                     },
                   ),
