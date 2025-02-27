@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_anime/features/anime/screens/home_screen.dart';
 import 'package:flutter_anime/features/genre/screens/genre_screen.dart';
+import 'package:flutter_anime/features/history/screens/history_screen.dart';
 import 'package:flutter_anime/utils/colors.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,12 +17,14 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const HomeScreen(),
     GenreScreen(),
-    const HomeScreen(),
+    const HistoryScreen(),
+    const HomeScreen(), // Profile screen placeholder
   ];
 
   final List<IconData> tabBarIcons = [
     Icons.home,
     Icons.search,
+    Icons.history, // Added history icon
     Icons.person,
   ];
 
@@ -36,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          _pages[_selectedIndex], 
+          _pages[_selectedIndex],
           Positioned(
             bottom: 30,
             left: 25,

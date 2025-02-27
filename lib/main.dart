@@ -17,14 +17,27 @@ import 'package:flutter_anime/features/anime_status/bloc/ongoing/ongoing_bloc.da
 import 'package:flutter_anime/features/anime_status/repositories/ongoing_repository.dart';
 import 'package:flutter_anime/features/anime_status/screens/ongoing_screen.dart';
 import 'package:flutter_anime/features/anime_status/services/ongoing_service.dart';
+import 'package:flutter_anime/features/history/bloc/history_bloc.dart';
+import 'package:flutter_anime/features/history/repositories/history_repository.dart';
+import 'package:flutter_anime/features/history/services/history_service.dart';
 import 'package:flutter_anime/features/main/screens/main_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'features/anime/services/anime_service.dart';
 import 'features/anime_detail/bloc/anime_detail_bloc.dart';
 import 'features/anime_detail/repositories/anime_detail_repository.dart';
 import 'features/anime_detail/services/anime_detail_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await dotenv.load(fileName: '.env');
+
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
   runApp(MyApp());
 }
 
@@ -91,6 +104,13 @@ class MyApp extends StatelessWidget {
             ),
           ),
           // child: const MoreOngoingScreen(),
+        ),
+        BlocProvider(
+          create: (context) => HistoryBloc(
+            historyRepository: HistoryRepository(
+              historyService: HistoryService(),
+            ),
+          ),
         ),
       ],
       child: MaterialApp(

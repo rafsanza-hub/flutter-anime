@@ -7,6 +7,8 @@ import '../bloc/anime_detail_state.dart';
 import '../bloc/anime_detail_event.dart';
 import '../models/anime_detail_model.dart';
 import '../../episode_detail/screens/episode_detail_screen.dart';
+import '../../history/bloc/history_bloc.dart'; // Tambah import
+import '../../history/models/history_model.dart'; // Tambah import
 
 class AnimeDetailScreen extends StatefulWidget {
   final String animeId;
@@ -29,7 +31,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Add this line to fetch the anime details
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: BlocBuilder<AnimeDetailBloc, AnimeDetailState>(
@@ -83,17 +84,15 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
   Widget _buildHeroImage(String imageUrl) {
     return SizedBox(
       width: double.infinity,
-      height: 500, // Increased height
+      height: 500,
       child: Stack(
         children: [
-          // Background image that fills the space
           Positioned.fill(
             child: Image.network(
               imageUrl,
               fit: BoxFit.cover,
             ),
           ),
-          // Gradient overlay
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
@@ -147,24 +146,6 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
             ),
           ),
         ),
-        // Row(
-        //   children: [
-        //     Text(
-        //       anime.score.toString(),
-        //       style: const TextStyle(
-        //         color: Colors.white,
-        //         fontSize: 15,
-        //         fontWeight: FontWeight.w600,
-        //       ),
-        //     ),
-        //     const SizedBox(width: 10),
-        //     const Icon(
-        //       Icons.star_rate_rounded,
-        //       color: Colors.yellow,
-        //       size: 15,
-        //     ),
-        //   ],
-        // ),
       ],
     );
   }
@@ -276,7 +257,24 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
               ),
               trailing:
                   const Icon(Icons.play_circle_outline, color: kButtonColor),
-              onTap: () => _navigateToEpisode(context, episode.episodeId),
+              onTap: () {
+                // Tambah histori saat episode dipilih
+                final historyEntry = HistoryEntry(
+                  animeId: widget.animeId,
+                  title:
+                      context.read<AnimeDetailBloc>().state is AnimeDetailLoaded
+                          ? (context.read<AnimeDetailBloc>().state
+                                  as AnimeDetailLoaded)
+                              .animeDetail
+                              .data
+                              .title
+                          : 'Unknown',
+                  episode: episode.episodeId,
+                  timestamp: DateTime.now().toIso8601String(),
+                );
+                context.read<HistoryBloc>().add(AddHistoryEvent(historyEntry));
+                _navigateToEpisode(context, episode.episodeId);
+              },
             );
           },
         ),
@@ -311,7 +309,22 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       right: 30,
       bottom: 30,
       child: GestureDetector(
-        onTap: () => _navigateToEpisode(context, episode),
+        onTap: () {
+          // Tambah histori saat tombol "Tonton Sekarang" ditekan
+          final historyEntry = HistoryEntry(
+            animeId: widget.animeId,
+            title: context.read<AnimeDetailBloc>().state is AnimeDetailLoaded
+                ? (context.read<AnimeDetailBloc>().state as AnimeDetailLoaded)
+                    .animeDetail
+                    .data
+                    .title
+                : 'Unknown',
+            episode: episode,
+            timestamp: DateTime.now().toIso8601String(),
+          );
+          context.read<HistoryBloc>().add(AddHistoryEvent(historyEntry));
+          _navigateToEpisode(context, episode);
+        },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Container(
