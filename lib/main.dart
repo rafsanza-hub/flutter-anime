@@ -6,6 +6,9 @@ import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_bloc.dart
 import 'package:flutter_anime/features/anime_by_genre/repositories/anime_genre_repository.dart';
 import 'package:flutter_anime/features/anime_by_genre/services/anime_genre_service.dart';
 import 'package:flutter_anime/features/anime_status/bloc/completed/completed_bloc.dart';
+import 'package:flutter_anime/features/auth/bloc/auth_bloc.dart';
+import 'package:flutter_anime/features/auth/repositories/auth_repository.dart';
+import 'package:flutter_anime/features/auth/services/auth_service.dart';
 import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_bloc.dart';
 import 'package:flutter_anime/features/episode_detail/repositories/episode_detail_repository.dart';
 import 'package:flutter_anime/features/episode_detail/services/episode_detail_service.dart';
@@ -111,6 +114,13 @@ class MyApp extends StatelessWidget {
               historyService: HistoryService(),
             ),
           ),
+        ),
+        BlocProvider(
+          create: (context) => AuthBloc(
+            authRepository: AuthRepository(
+              authService: AuthService(),
+            ),
+          )..add(CheckAuthEvent()), // Cek status auth saat app mulai
         ),
       ],
       child: MaterialApp(
