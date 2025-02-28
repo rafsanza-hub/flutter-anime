@@ -259,20 +259,23 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
                   const Icon(Icons.play_circle_outline, color: kButtonColor),
               onTap: () {
                 // Tambah histori saat episode dipilih
-                final historyEntry = HistoryEntry(
-                  animeId: widget.animeId,
-                  title:
-                      context.read<AnimeDetailBloc>().state is AnimeDetailLoaded
-                          ? (context.read<AnimeDetailBloc>().state
-                                  as AnimeDetailLoaded)
-                              .animeDetail
-                              .data
-                              .title
-                          : 'Unknown',
-                  episode: episode.episodeId,
-                  timestamp: DateTime.now().toIso8601String(),
-                );
-                context.read<HistoryBloc>().add(AddHistoryEvent(historyEntry));
+                if (context.read<AnimeDetailBloc>().state
+                    is AnimeDetailLoaded) {
+                  final animeDetail = (context.read<AnimeDetailBloc>().state
+                          as AnimeDetailLoaded)
+                      .animeDetail
+                      .data;
+                  final historyEntry = HistoryEntry(
+                    animeId: widget.animeId,
+                    title: animeDetail.title,
+                    episode: episode.episodeId,
+                    timestamp: DateTime.now().toString(),
+                    poster: animeDetail.poster,
+                  );
+                  context
+                      .read<HistoryBloc>()
+                      .add(AddHistoryEvent(historyEntry));
+                }
                 _navigateToEpisode(context, episode.episodeId);
               },
             );
@@ -311,19 +314,22 @@ class _AnimeDetailScreenState extends State<AnimeDetailScreen> {
       child: GestureDetector(
         onTap: () {
           // Tambah histori saat tombol "Tonton Sekarang" ditekan
-          final historyEntry = HistoryEntry(
-            animeId: widget.animeId,
-            title: context.read<AnimeDetailBloc>().state is AnimeDetailLoaded
-                ? (context.read<AnimeDetailBloc>().state as AnimeDetailLoaded)
+          if (context.read<AnimeDetailBloc>().state is AnimeDetailLoaded) {
+            final animeDetail =
+                (context.read<AnimeDetailBloc>().state as AnimeDetailLoaded)
                     .animeDetail
-                    .data
-                    .title
-                : 'Unknown',
-            episode: episode,
-            timestamp: DateTime.now().toIso8601String(),
-          );
-          context.read<HistoryBloc>().add(AddHistoryEvent(historyEntry));
-          _navigateToEpisode(context, episode);
+                    .data;
+            final lastEpisode = animeDetail.episodeList.last;
+            final historyEntry = HistoryEntry(
+              animeId: widget.animeId,
+              title: animeDetail.title,
+              episode: lastEpisode.episodeId,
+              timestamp: DateTime.now().toString(),
+              poster: animeDetail.poster,
+            );
+            context.read<HistoryBloc>().add(AddHistoryEvent(historyEntry));
+            _navigateToEpisode(context, lastEpisode.episodeId);
+          }
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
