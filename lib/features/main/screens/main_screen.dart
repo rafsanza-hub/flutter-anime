@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_anime/features/anime/screens/home_screen.dart';
+import 'package:flutter_anime/features/genre/screens/genre_screen.dart';
+import 'package:flutter_anime/features/history/screens/history_screen.dart';
+import 'package:flutter_anime/utils/colors.dart';
 import '../../auth/bloc/auth_bloc.dart';
 import '../../auth/screens/login_screen.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../anime/screens/home_screen.dart';
-import '../../genre/screens/genre_screen.dart';
-import '../../history/screens/history_screen.dart';
-import '../../../utils/colors.dart';
+import '../../profile/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     GenreScreen(),
     const HistoryScreen(),
-    const HistoryScreen(),
+    const ProfileScreen(),
   ];
 
   final List<IconData> tabBarIcons = [
@@ -42,7 +43,8 @@ class _MainScreenState extends State<MainScreen> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthUnauthenticated) {
-          Navigator.pushReplacementNamed(context, '/login');
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()));
         }
       },
       builder: (context, state) {
@@ -82,7 +84,8 @@ class _MainScreenState extends State<MainScreen> {
                                           ? NetworkImage(state.user.avatarUrl!)
                                           : null,
                                       child: state.user.avatarUrl == null
-                                          ? const Icon(Icons.person, size: 15)
+                                          ? const Icon(Icons.person,
+                                              size: 15, color: Colors.white)
                                           : null,
                                     )
                                   : Icon(
