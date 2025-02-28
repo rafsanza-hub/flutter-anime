@@ -9,7 +9,6 @@ class AnimeDetailService {
 
   Future<AnimeDetailResponse> fetchAnimeDetail(String animeId) async {
     final response = await http.get(Uri.parse('$baseUrl/anime/$animeId'));
-     print(response.body);
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);

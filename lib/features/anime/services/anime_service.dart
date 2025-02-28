@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_anime/features/anime/models/anime_model.dart';
+import '../models/anime_model.dart';
 import 'package:http/http.dart' as http;
 
 class AnimeService {
@@ -23,7 +23,6 @@ class AnimeService {
             'Gagal memuat data. Status Code: ${response.statusCode}\nBody: ${response.body}');
       }
     } catch (e) {
-      print(e);
       throw Exception('Terjadi kesalahan saat memuat data: $e');
     }
   }
@@ -51,7 +50,6 @@ class AnimeService {
         );
       }
     } catch (e) {
-      print(e);
       throw Exception('Terjadi kesalahan saat memuat data: $e');
     }
   }

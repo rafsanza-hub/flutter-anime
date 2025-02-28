@@ -24,7 +24,6 @@ class VideoExtractorService {
         }
       }
     } catch (e) {
-      print('Error extracting direct video URL: $e');
     }
     return null;
   }

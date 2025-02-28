@@ -1,5 +1,5 @@
-import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_event.dart';
-import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_state.dart';
+import 'episode_detail_bloc_event.dart';
+import 'episode_detail_bloc_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../repositories/episode_detail_repository.dart';
 

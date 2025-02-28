@@ -1,4 +1,4 @@
-import 'package:flutter_anime/features/episode_detail/models/episode_detail_model.dart';
+import '../models/episode_detail_model.dart';
 
 abstract class EpisodeDetailState {}
 

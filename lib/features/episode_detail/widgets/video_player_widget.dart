@@ -10,8 +10,8 @@ class VideoPlayerWidget extends StatefulWidget {
     required this.videoUrl,
     this.autoPlay = true,
     this.looping = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   @override
   _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
 }

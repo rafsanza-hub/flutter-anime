@@ -1,8 +1,8 @@
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_event.dart';
-import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_state.dart';
-import 'package:flutter_anime/features/anime_by_genre/repositories/anime_genre_repository.dart';
+import 'anime_genre_event.dart';
+import 'anime_genre_state.dart';
+import '../repositories/anime_genre_repository.dart';
 
 class AnimeGenreBloc extends Bloc<AnimeGenreEvent, AnimeGenreState> {
   final AnimeGenreRepository animeGenreRepository;

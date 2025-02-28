@@ -1,5 +1,5 @@
-import 'package:flutter_anime/features/anime_status/models/ongoing_model.dart';
-import 'package:flutter_anime/features/anime_status/services/ongoing_service.dart';
+import '../models/ongoing_model.dart';
+import '../services/ongoing_service.dart';
 
 class OngoingRepository {
   final StatusService animeService;

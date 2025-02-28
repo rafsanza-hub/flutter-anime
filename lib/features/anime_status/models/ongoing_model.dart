@@ -1,4 +1,4 @@
-import 'package:flutter_anime/features/anime/models/anime_model.dart';
+import '../../anime/models/anime_model.dart';
 
 class StatusAnimeResponse {
   final List<OngoingAnime> animeList;

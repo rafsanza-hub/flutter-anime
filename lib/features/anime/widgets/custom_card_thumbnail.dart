@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/anime/models/anime_model.dart';
-import 'package:flutter_anime/utils/colors.dart';
+import '../models/anime_model.dart';
+import '../../../utils/colors.dart';
 
 class CustomCardThumbnail extends StatelessWidget {
   final Anime anime;

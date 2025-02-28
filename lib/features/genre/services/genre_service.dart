@@ -19,7 +19,6 @@ class GenreService {
         throw Exception('Failed to load genres: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching genres: $e');
       rethrow;
     }
   }

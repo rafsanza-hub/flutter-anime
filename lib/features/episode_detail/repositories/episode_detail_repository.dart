@@ -11,7 +11,6 @@ class EpisodeDetailRepository {
       final data = await episodeDetailService.fetchEpisodeDetail(episodeId);
       return data;
     } catch (e) {
-      print(e);
       throw Exception([e].toString());
     }
   }

@@ -31,7 +31,6 @@ class EpisodeDetailService {
       final Map<String, dynamic> serverJson = jsonDecode(serverResponse.body);
       final embedUrl = serverJson["data"]["url"];
 
-      print("URL embed: $embedUrl");
 
       // Step 3: Ekstrak URL video langsung dari embed page
       final videoUrl = await VideoExtractorService.extractVideoUrl(embedUrl);
@@ -42,7 +41,6 @@ class EpisodeDetailService {
 
       return episodeDetail;
     } catch (e) {
-      print('Error in fetchEpisodeDetail: $e');
       rethrow;
     }
   }

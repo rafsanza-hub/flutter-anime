@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_anime/features/anime_status/models/ongoing_model.dart';
+import '../models/ongoing_model.dart';
 import 'package:http/http.dart' as http;
 
 class StatusService {
@@ -21,7 +21,6 @@ class StatusService {
             'Gagal memuat data. Status Code: ${response.statusCode}\nBody: ${response.body}');
       }
     } catch (e) {
-      print(e);
       throw Exception('Terjadi kesalahan saat memuat data: $e');
     }
   }
@@ -38,7 +37,6 @@ class StatusService {
             'Gagal memuat data. Status Code: ${response.statusCode}\nBody: ${response.body}');
       }
     } catch (e) {
-      print(e);
       throw Exception('Terjadi kesalahan saat memuat data: $e');
     }
   }

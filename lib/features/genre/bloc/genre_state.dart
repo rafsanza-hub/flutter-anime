@@ -1,5 +1,5 @@
 
-import 'package:flutter_anime/features/genre/models/genre_model.dart';
+import '../models/genre_model.dart';
 
 abstract class GenreState {}
 

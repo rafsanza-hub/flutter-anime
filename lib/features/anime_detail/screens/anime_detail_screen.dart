@@ -15,8 +15,8 @@ class AnimeDetailScreen extends StatefulWidget {
 
   const AnimeDetailScreen({
     required this.animeId,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<AnimeDetailScreen> createState() => _AnimeDetailScreenState();

@@ -1,6 +1,6 @@
-import 'package:flutter_anime/features/genre/bloc/genre_event.dart';
-import 'package:flutter_anime/features/genre/bloc/genre_state.dart';
-import 'package:flutter_anime/features/genre/repositories/genre_repository.dart';
+import 'genre_event.dart';
+import 'genre_state.dart';
+import '../repositories/genre_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 

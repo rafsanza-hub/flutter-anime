@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_bloc.dart';
-import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_event.dart';
-import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_state.dart';
-import 'package:flutter_anime/features/anime_by_genre/models/anime_genre_model.dart';
-import 'package:flutter_anime/features/anime_detail/screens/anime_detail_screen.dart';
+import '../bloc/anime_genre_bloc.dart';
+import '../bloc/anime_genre_event.dart';
+import '../bloc/anime_genre_state.dart';
+import '../models/anime_genre_model.dart';
+import '../../anime_detail/screens/anime_detail_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AnimeGenreScreen extends StatefulWidget {

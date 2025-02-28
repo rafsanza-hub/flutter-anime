@@ -116,9 +116,9 @@ class SearchSection extends StatelessWidget {
   final Function(String) onSearchChanged;
 
   const SearchSection({
-    Key? key,
+    super.key,
     required this.onSearchChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -345,19 +345,19 @@ class HeaderSection extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileAvatar() {
-    return Container(
-      height: 50,
-      width: 50,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        image: const DecorationImage(
-          image: NetworkImage(
-            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=387&q=80",
-          ),
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }
+  // Widget _buildProfileAvatar() {
+  //   return Container(
+  //     height: 50,
+  //     width: 50,
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(25),
+  //       image: const DecorationImage(
+  //         image: NetworkImage(
+  //           "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=387&q=80",
+  //         ),
+  //         fit: BoxFit.cover,
+  //       ),
+  //     ),
+  //   );
+  // }
 }

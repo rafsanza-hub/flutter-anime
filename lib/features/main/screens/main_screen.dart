@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/auth/bloc/auth_bloc.dart';
-import 'package:flutter_anime/features/auth/screens/login_screen.dart';
+import '../../auth/bloc/auth_bloc.dart';
+import '../../auth/screens/login_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_anime/features/anime/screens/home_screen.dart';
-import 'package:flutter_anime/features/genre/screens/genre_screen.dart';
-import 'package:flutter_anime/features/history/screens/history_screen.dart';
-import 'package:flutter_anime/utils/colors.dart';
+import '../../anime/screens/home_screen.dart';
+import '../../genre/screens/genre_screen.dart';
+import '../../history/screens/history_screen.dart';
+import '../../../utils/colors.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

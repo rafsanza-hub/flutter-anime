@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter_anime/features/anime_status/models/ongoing_model.dart';
-import 'package:flutter_anime/features/anime_status/repositories/ongoing_repository.dart';
+import '../../models/ongoing_model.dart';
+import '../../repositories/ongoing_repository.dart';
 
 part 'completed_event.dart';
 part 'completed_state.dart';

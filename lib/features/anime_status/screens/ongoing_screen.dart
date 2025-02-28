@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/anime_detail/screens/anime_detail_screen.dart';
-import 'package:flutter_anime/features/anime_status/bloc/ongoing/ongoing_bloc.dart';
-import 'package:flutter_anime/features/anime_status/widgets/ongoing_card.dart';
+import '../../anime_detail/screens/anime_detail_screen.dart';
+import '../bloc/ongoing/ongoing_bloc.dart';
+import '../widgets/ongoing_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MoreOngoingScreen extends StatefulWidget {

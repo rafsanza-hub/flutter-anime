@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/anime_by_genre/screens/anime_genre_screen.dart';
-import 'package:flutter_anime/features/genre/bloc/genre_state.dart';
-import 'package:flutter_anime/utils/colors.dart';
+import '../../anime_by_genre/screens/anime_genre_screen.dart';
+import '../bloc/genre_state.dart';
+import '../../../utils/colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/genre_bloc.dart';
 
 class GenreScreen extends StatelessWidget {
+  const GenreScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

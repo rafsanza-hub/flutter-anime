@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/anime/models/anime_model.dart';
+import '../../anime/models/anime_model.dart';
 
 class OngoingCard extends StatelessWidget {
   final OngoingAnime anime;
 
   const OngoingCard({
-    Key? key,
+    super.key,
     required this.anime,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

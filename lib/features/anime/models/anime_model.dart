@@ -1,4 +1,4 @@
-import 'package:flutter_anime/features/anime/models/genre_model.dart';
+import 'genre_model.dart';
 
 class AnimeList {
   final List<OngoingAnime> ongoing;

@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/anime/bloc/anime_bloc.dart';
-import 'package:flutter_anime/features/anime/repositories/anime_repository.dart';
-import 'package:flutter_anime/features/anime/screens/home_screen.dart';
-import 'package:flutter_anime/features/anime_by_genre/bloc/anime_genre_bloc.dart';
-import 'package:flutter_anime/features/anime_by_genre/repositories/anime_genre_repository.dart';
-import 'package:flutter_anime/features/anime_by_genre/services/anime_genre_service.dart';
-import 'package:flutter_anime/features/anime_status/bloc/completed/completed_bloc.dart';
-import 'package:flutter_anime/features/auth/bloc/auth_bloc.dart';
-import 'package:flutter_anime/features/auth/repositories/auth_repository.dart';
-import 'package:flutter_anime/features/auth/services/auth_service.dart';
-import 'package:flutter_anime/features/episode_detail/bloc/episode_detail_bloc_bloc.dart';
-import 'package:flutter_anime/features/episode_detail/repositories/episode_detail_repository.dart';
-import 'package:flutter_anime/features/episode_detail/services/episode_detail_service.dart';
-import 'package:flutter_anime/features/genre/bloc/genre_bloc.dart';
-import 'package:flutter_anime/features/genre/bloc/genre_event.dart';
-import 'package:flutter_anime/features/genre/repositories/genre_repository.dart';
-import 'package:flutter_anime/features/genre/services/genre_service.dart';
-import 'package:flutter_anime/features/anime_status/bloc/ongoing/ongoing_bloc.dart';
-import 'package:flutter_anime/features/anime_status/repositories/ongoing_repository.dart';
-import 'package:flutter_anime/features/anime_status/screens/ongoing_screen.dart';
-import 'package:flutter_anime/features/anime_status/services/ongoing_service.dart';
-import 'package:flutter_anime/features/history/bloc/history_bloc.dart';
-import 'package:flutter_anime/features/history/repositories/history_repository.dart';
-import 'package:flutter_anime/features/history/services/history_service.dart';
-import 'package:flutter_anime/features/main/screens/main_screen.dart';
+import 'features/anime/bloc/anime_bloc.dart';
+import 'features/anime/repositories/anime_repository.dart';
+import 'features/anime_by_genre/bloc/anime_genre_bloc.dart';
+import 'features/anime_by_genre/repositories/anime_genre_repository.dart';
+import 'features/anime_by_genre/services/anime_genre_service.dart';
+import 'features/anime_status/bloc/completed/completed_bloc.dart';
+import 'features/auth/bloc/auth_bloc.dart';
+import 'features/auth/repositories/auth_repository.dart';
+import 'features/auth/services/auth_service.dart';
+import 'features/episode_detail/bloc/episode_detail_bloc_bloc.dart';
+import 'features/episode_detail/repositories/episode_detail_repository.dart';
+import 'features/episode_detail/services/episode_detail_service.dart';
+import 'features/genre/bloc/genre_bloc.dart';
+import 'features/genre/bloc/genre_event.dart';
+import 'features/genre/repositories/genre_repository.dart';
+import 'features/genre/services/genre_service.dart';
+import 'features/anime_status/bloc/ongoing/ongoing_bloc.dart';
+import 'features/anime_status/repositories/ongoing_repository.dart';
+import 'features/anime_status/services/ongoing_service.dart';
+import 'features/history/bloc/history_bloc.dart';
+import 'features/history/repositories/history_repository.dart';
+import 'features/history/services/history_service.dart';
+import 'features/main/screens/main_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -45,6 +43,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

@@ -1,4 +1,4 @@
-import 'package:flutter_anime/features/anime_by_genre/models/anime_genre_model.dart';
+import '../models/anime_genre_model.dart';
 
 class AnimeGenreState {}
 

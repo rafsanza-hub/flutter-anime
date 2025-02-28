@@ -12,8 +12,8 @@ class EpisodeDetailScreen extends StatefulWidget {
 
   const EpisodeDetailScreen({
     required this.episodeId,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<EpisodeDetailScreen> createState() => _EpisodeDetailScreenState();
@@ -213,26 +213,26 @@ class _EpisodeDetailScreenState extends State<EpisodeDetailScreen> {
     );
   }
 
-  Widget _buildCloseButton(BuildContext context) {
-    return Positioned(
-      top: 60,
-      left: 20,
-      child: Container(
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white24,
-        ),
-        child: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(
-            Icons.close_rounded,
-            color: Colors.white,
-            size: 20,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildCloseButton(BuildContext context) {
+  //   return Positioned(
+  //     top: 60,
+  //     left: 20,
+  //     child: Container(
+  //       decoration: const BoxDecoration(
+  //         shape: BoxShape.circle,
+  //         color: Colors.white24,
+  //       ),
+  //       child: IconButton(
+  //         onPressed: () => Navigator.pop(context),
+  //         icon: const Icon(
+  //           Icons.close_rounded,
+  //           color: Colors.white,
+  //           size: 20,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void _navigateToEpisode(BuildContext context, String episodeId) {
     Navigator.pushReplacement(

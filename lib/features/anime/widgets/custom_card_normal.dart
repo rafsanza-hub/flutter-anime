@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_anime/features/anime/models/anime_model.dart';
+import '../models/anime_model.dart';
 
 class CustomCardNormal extends StatelessWidget {
   final Anime anime;
 
   const CustomCardNormal({
-    Key? key,
+    super.key,
     required this.anime,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

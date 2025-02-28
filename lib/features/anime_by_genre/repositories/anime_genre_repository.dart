@@ -1,5 +1,5 @@
-import 'package:flutter_anime/features/anime_by_genre/models/anime_genre_model.dart';
-import 'package:flutter_anime/features/anime_by_genre/services/anime_genre_service.dart';
+import '../models/anime_genre_model.dart';
+import '../services/anime_genre_service.dart';
 
 class AnimeGenreRepository {
   final AnimeGenreService animeGenreService;
