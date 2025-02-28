@@ -4,6 +4,7 @@ import '../bloc/genre_state.dart';
 import '../../../utils/colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/genre_bloc.dart';
+import '../../../features/search/screens/search_screen.dart';
 
 class GenreScreen extends StatelessWidget {
   const GenreScreen({super.key});
@@ -11,36 +12,79 @@ class GenreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Genres')),
-      body: BlocBuilder<GenreBloc, GenreState>(
-        builder: (context, state) {
-          if (state is GenreLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is GenreLoaded) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Wrap(
-                spacing: 8.0, // Jarak antar chip horizontal
-                runSpacing: 8.0, // Jarak antar chip vertikal
-                children: state.genres.map((genre) {
-                  return GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            AnimeGenreScreen(genreId: genre.genreId),
+      backgroundColor: kBackgroundColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(30),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Genres',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    child: _buildTag(genre.title),
-                  );
-                }).toList(),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.search_rounded,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SearchScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            );
-          } else if (state is GenreError) {
-            return Center(child: Text(state.message));
-          }
-          return Center(child: Text('Tidak ada data.'));
-        },
+            ),
+            Expanded(
+              child: BlocBuilder<GenreBloc, GenreState>(
+                builder: (context, state) {
+                  if (state is GenreLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is GenreLoaded) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        children: state.genres.map((genre) {
+                          return GestureDetector(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AnimeGenreScreen(genreId: genre.genreId),
+                              ),
+                            ),
+                            child: _buildTag(genre.title),
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  } else if (state is GenreError) {
+                    return Center(child: Text(state.message));
+                  }
+                  return const Center(child: Text('Tidak ada data.'));
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

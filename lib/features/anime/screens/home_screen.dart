@@ -10,7 +10,8 @@ import 'package:flutter_anime/features/anime_status/screens/completed_screen.dar
 import 'package:flutter_anime/features/anime_status/screens/ongoing_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utils/colors.dart';
-import '../../anime/bloc/anime_bloc.dart';
+import '../bloc/anime_bloc.dart';
+import '../../../features/search/screens/search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,19 +21,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Timer? _debounce;
-
-  void _onSearchChanged(String query) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      context.read<AnimeBloc>().add(SearchAnimeEvent(query: query));
-    });
-  }
+  late final AnimeBloc animeBloc;
 
   @override
-  void dispose() {
-    _debounce?.cancel();
-    super.dispose();
+  void initState() {
+    super.initState();
+    animeBloc = BlocProvider.of<AnimeBloc>(context);
+    animeBloc.add(FetchAnimeEvent());
   }
 
   @override
@@ -41,20 +36,48 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: kBackgroundColor,
       body: SafeArea(
         child: BlocBuilder<AnimeBloc, AnimeState>(
+          bloc: animeBloc,
           builder: (context, state) {
-            return Column(
-              children: [
-                const HeaderSection(),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: SearchSection(onSearchChanged: _onSearchChanged),
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: _buildContent(state),
-                ),
-              ],
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Hi, Rafsan",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.search_rounded,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SearchScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildContent(state),
+                ],
+              ),
             );
           },
         ),
@@ -66,98 +89,19 @@ class _HomeScreenState extends State<HomeScreen> {
     if (state is AnimeLoadingState) {
       return const Center(child: CircularProgressIndicator());
     } else if (state is AnimeLoadedState) {
-      return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            AnimeCardsSection(
-              ongoingAnime: state.animeList.ongoing,
-              completedAnime: state.animeList.completed,
-            ),
-            const SizedBox(height: 100),
-          ],
-        ),
-      );
-    } else if (state is AnimeSearchLoadedState) {
-      return GridView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        physics: const BouncingScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.7,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-        itemCount: state.searchResults.length,
-        itemBuilder: (context, index) {
-          final anime = state.searchResults[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      AnimeDetailScreen(animeId: anime.animeId),
-                ),
-              );
-            },
-            child: PersegiCard(anime: anime),
-          );
-        },
+      return Column(
+        children: [
+          AnimeCardsSection(
+            ongoingAnime: state.animeList.ongoing,
+            completedAnime: state.animeList.completed,
+          ),
+          const SizedBox(height: 100),
+        ],
       );
     } else if (state is AnimeErrorState) {
       return Center(child: Text(state.message));
     }
     return const Center(child: Text('Ada Kesalahan'));
-  }
-}
-
-class SearchSection extends StatelessWidget {
-  final Function(String) onSearchChanged;
-
-  const SearchSection({
-    super.key,
-    required this.onSearchChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      decoration: BoxDecoration(
-        color: kSearchbarColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.search_rounded,
-            color: Colors.white30,
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: TextField(
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w300,
-              ),
-              decoration: const InputDecoration(
-                hintText: "Search anime",
-                hintStyle: TextStyle(
-                  color: Colors.white54,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w300,
-                ),
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-              ),
-              onChanged: onSearchChanged,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -209,9 +153,10 @@ class AnimeCardsSection extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (title == "Ongoing")
-                        ? (context) => const MoreOngoingScreen()
-                        : (context) => const MoreCompletedScreen()),
+                  builder: (title == "Ongoing")
+                      ? (context) => const MoreOngoingScreen()
+                      : (context) => const MoreCompletedScreen(),
+                ),
               );
             },
             child: const Text(
@@ -285,38 +230,6 @@ class AnimeCardsSection extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class SearchSections extends StatelessWidget {
-  const SearchSections({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: kSearchbarColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: const Row(
-        children: [
-          Icon(
-            Icons.search_rounded,
-            color: Colors.white30,
-          ),
-          SizedBox(width: 20),
-          Text(
-            "Search anime",
-            style: TextStyle(
-              color: Colors.white54,
-              fontSize: 16,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

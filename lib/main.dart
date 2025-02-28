@@ -29,10 +29,11 @@ import 'features/anime/services/anime_service.dart';
 import 'features/anime_detail/bloc/anime_detail_bloc.dart';
 import 'features/anime_detail/repositories/anime_detail_repository.dart';
 import 'features/anime_detail/services/anime_detail_service.dart';
+import 'features/search/bloc/search_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await dotenv.load(fileName: '.env');
 
   await Supabase.initialize(
@@ -57,6 +58,15 @@ class MyApp extends StatelessWidget {
                   AnimeService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
             ),
           )..add(FetchAnimeEvent()),
+        ),
+        // BLoC untuk search
+        BlocProvider(
+          create: (context) => SearchBloc(
+            animeRepository: AnimeRepository(
+              animeService:
+                  AnimeService(baseUrl: 'http://10.0.2.2:3001/otakudesu'),
+            ),
+          ),
         ),
         // BLoC untuk halaman detail
         BlocProvider(
