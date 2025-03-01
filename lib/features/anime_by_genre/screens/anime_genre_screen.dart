@@ -5,6 +5,7 @@ import '../bloc/anime_genre_state.dart';
 import '../models/anime_genre_model.dart';
 import '../../anime_detail/screens/anime_detail_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class AnimeGenreScreen extends StatefulWidget {
   final String genreId;
@@ -91,22 +92,21 @@ class _AnimeGenreScreenState extends State<AnimeGenreScreen> {
           // Poster Image
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              anime.poster,
+            child: CachedNetworkImage(
+              imageUrl: anime.poster,
               width: 130,
               height: 180,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  width: 130,
-                  height: 180,
-                  color: Colors.grey[800],
-                  child: const Icon(
-                    Icons.error_outline,
-                    color: Colors.white54,
-                  ),
-                );
-              },
+              placeholder: (context, url) => Container(
+                color: Colors.grey[900],
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[900],
+                child: const Icon(Icons.error, color: Colors.white54),
+              ),
             ),
           ),
 

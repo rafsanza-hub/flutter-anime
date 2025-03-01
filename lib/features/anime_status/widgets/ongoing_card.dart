@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../anime/models/anime_model.dart';
 
 class OngoingCard extends StatelessWidget {
@@ -19,11 +20,21 @@ class OngoingCard extends StatelessWidget {
           // Gambar Anime (Card Bersih)
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              anime.poster,
-              width: 130, // Lebar gambar
-              height: 180, // Tinggi gambar
+            child: CachedNetworkImage(
+              imageUrl: anime.poster,
+              width: 130,
+              height: 180,
               fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: Colors.grey[900],
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[900],
+                child: const Icon(Icons.error, color: Colors.white54),
+              ),
             ),
           ),
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/anime_model.dart';
 
 class CustomCardNormal extends StatelessWidget {
@@ -18,14 +19,23 @@ class CustomCardNormal extends StatelessWidget {
           height: 180,
           width: 120,
           margin: const EdgeInsets.symmetric(horizontal: 4),
-          decoration: BoxDecoration(
+          child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            image: DecorationImage(
-              image: NetworkImage(anime.poster),
+            child: CachedNetworkImage(
+              imageUrl: anime.poster,
               fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: Colors.grey[900],
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[900],
+                child: const Icon(Icons.error, color: Colors.white54),
+              ),
             ),
           ),
-          // Overlay gradient
           foregroundDecoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             gradient: LinearGradient(

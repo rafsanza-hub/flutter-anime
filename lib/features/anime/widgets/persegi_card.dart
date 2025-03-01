@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/anime_model.dart';
 
 class PersegiCard extends StatelessWidget {
@@ -32,9 +33,19 @@ class PersegiCard extends StatelessWidget {
               // Anime Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  anime.poster,
+                child: CachedNetworkImage(
+                  imageUrl: anime.poster,
                   fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: Colors.grey[900],
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[900],
+                    child: const Icon(Icons.error, color: Colors.white54),
+                  ),
                 ),
               ),
 

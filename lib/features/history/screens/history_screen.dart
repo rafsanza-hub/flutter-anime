@@ -4,6 +4,7 @@ import '../bloc/history_bloc.dart';
 import '../../anime_detail/screens/anime_detail_screen.dart';
 import '../../episode_detail/screens/episode_detail_screen.dart';
 import '../../../utils/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -58,19 +59,22 @@ class HistoryScreen extends StatelessWidget {
                           // Poster
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              entry.poster,
+                            child: CachedNetworkImage(
+                              imageUrl: entry.poster,
                               width: 80,
                               height: 120,
                               fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  width: 80,
-                                  height: 120,
-                                  color: Colors.grey[800],
-                                  child: const Icon(Icons.error),
-                                );
-                              },
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey[900],
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                color: Colors.grey[900],
+                                child: const Icon(Icons.error,
+                                    color: Colors.white54),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 16),

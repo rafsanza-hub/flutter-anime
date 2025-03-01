@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_anime/features/anime/models/anime_model.dart';
 import 'package:flutter_anime/features/anime/widgets/custom_card_normal.dart';
 import 'package:flutter_anime/features/anime/widgets/custom_card_thumbnail.dart';
@@ -170,7 +171,7 @@ class AnimeCardsSection extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   image: DecorationImage(
-                    image: NetworkImage(entry.poster),
+                    image: CachedNetworkImageProvider(entry.poster),
                     fit: BoxFit.cover,
                   ),
                 ),
