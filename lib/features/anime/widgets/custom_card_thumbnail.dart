@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import '../models/anime_model.dart';
 import '../../../utils/colors.dart';
 
 class CustomCardThumbnail extends StatelessWidget {
-  final Anime anime;
+  final String imageUrl;
 
   const CustomCardThumbnail({
-    super.key,
-    required this.anime,
-  });
+    Key? key,
+    required this.imageUrl,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 30),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -21,14 +19,15 @@ class CustomCardThumbnail extends StatelessWidget {
             blurRadius: 5,
             spreadRadius: 1,
             offset: const Offset(0, 3),
-          ),
+          )
         ],
         borderRadius: BorderRadius.circular(20),
         image: DecorationImage(
-          image: NetworkImage(anime.poster),
+          image: NetworkImage(imageUrl),
           fit: BoxFit.cover,
         ),
       ),
+      margin: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 30),
     );
   }
 }

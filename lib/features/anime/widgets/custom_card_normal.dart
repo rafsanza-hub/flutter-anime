@@ -15,13 +15,13 @@ class CustomCardNormal extends StatelessWidget {
       children: [
         // Background Image Container
         Container(
-          height: 200,
-          width: 140,
-          margin: const EdgeInsets.symmetric(horizontal: 12),
+          height: 180,
+          width: 120,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
-              image: NetworkImage(anime.poster), // poster
+              image: NetworkImage(anime.poster),
               fit: BoxFit.cover,
             ),
           ),
@@ -43,19 +43,19 @@ class CustomCardNormal extends StatelessWidget {
 
         // Episode Count Badge
         Positioned(
-          left: 15,
-          top: 10,
+          left: 7,
+          top: 8,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
             decoration: BoxDecoration(
               color: Colors.black.withOpacity(0.7),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
               '${anime.episodes} Eps',
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 12,
+                fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -64,20 +64,24 @@ class CustomCardNormal extends StatelessWidget {
 
         // Anime Title
         Positioned(
-          left: 12,
-          right: 12,
-          bottom: 12,
+          left: 4,
+          right: 4,
+          bottom: 8,
           child: Text(
             anime.title,
             maxLines: 2,
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
               shadows: [
                 Shadow(
-                    offset: Offset(0, 1), blurRadius: 3.0, color: Colors.black),
+                  offset: Offset(0, 1),
+                  blurRadius: 3.0,
+                  color: Colors.black,
+                ),
               ],
             ),
           ),

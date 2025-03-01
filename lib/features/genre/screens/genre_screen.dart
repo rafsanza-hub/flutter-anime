@@ -17,36 +17,32 @@ class GenreScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(30),
-              child: Column(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Genres',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
+                  const Text(
+                    'Genres',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.search_rounded,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SearchScreen(),
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.search_rounded,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SearchScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                      );
+                    },
                   ),
                 ],
               ),
@@ -58,20 +54,32 @@ class GenreScreen extends StatelessWidget {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is GenreLoaded) {
                     return Padding(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(16),
                       child: Wrap(
                         spacing: 8.0,
                         runSpacing: 8.0,
                         children: state.genres.map((genre) {
-                          return GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AnimeGenreScreen(genreId: genre.genreId),
+                          return ActionChip(
+                            backgroundColor: kSearchbarColor,
+                            side: BorderSide.none,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 4),
+                            label: Text(
+                              genre.title,
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 14,
                               ),
                             ),
-                            child: _buildTag(genre.title),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      AnimeGenreScreen(genreId: genre.genreId),
+                                ),
+                              );
+                            },
                           );
                         }).toList(),
                       ),
@@ -84,24 +92,6 @@ class GenreScreen extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTag(String title) {
-    return Container(
-      // margin: const EdgeInsets.only(top: 20),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-      decoration: BoxDecoration(
-        color: kSearchbarColor,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Text(
-        title,
-        style: const TextStyle(
-          color: Colors.white30,
-          fontSize: 16,
         ),
       ),
     );
