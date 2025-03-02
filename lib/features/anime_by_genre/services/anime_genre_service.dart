@@ -5,15 +5,32 @@ import 'package:http/http.dart' as http;
 class AnimeGenreService {
   final String baseUrl = "http://10.0.2.2:3001/otakudesu/";
 
-  Future<List<Anime>> fetchAnimeList(String genreId) async {
-    final response = await http.get(Uri.parse("$baseUrl/genres/$genreId"));
+  Future<AnimeGenreResponse> fetchAnimeList(String genreId,
+      {int page = 1}) async {
+    try {
+      final response =
+          await http.get(Uri.parse("$baseUrl/genres/$genreId?page=$page"));
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      List animeList = data['data']['animeList'];
-      return animeList.map((anime) => Anime.fromJson(anime)).toList();
-    } else {
-      throw Exception('Failed to load anime');
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return AnimeGenreResponse.fromJson(data);
+      } else if (response.statusCode == 404) {
+        return AnimeGenreResponse.fromJson({
+          'data': {'animeList': []},
+          'pagination': {
+            'currentPage': page,
+            'hasPrevPage': page > 1,
+            'prevPage': page > 1 ? page - 1 : null,
+            'hasNextPage': false,
+            'nextPage': null,
+            'totalPages': page
+          }
+        });
+      } else {
+        throw Exception('Failed to load anime');
+      }
+    } catch (e) {
+      throw Exception('Failed to load anime: $e');
     }
   }
 }

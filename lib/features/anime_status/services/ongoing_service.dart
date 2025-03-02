@@ -11,11 +11,23 @@ class StatusService {
   // Method untuk mengambil data ongoing anime dengan pagination
   Future<StatusAnimeResponse> getOngoingAnime(int page) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/ongoing'));
+      final response = await http.get(Uri.parse('$baseUrl/ongoing?page=$page'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
         return StatusAnimeResponse.fromJson(jsonData);
+      } else if (response.statusCode == 404) {
+        return StatusAnimeResponse.fromJson({
+          'data': {'animeList': []},
+          'pagination': {
+            'currentPage': page,
+            'hasPrevPage': page > 1,
+            'prevPage': page > 1 ? page - 1 : null,
+            'hasNextPage': false,
+            'nextPage': null,
+            'totalPages': page
+          }
+        });
       } else {
         throw Exception(
             'Gagal memuat data. Status Code: ${response.statusCode}\nBody: ${response.body}');
@@ -27,11 +39,24 @@ class StatusService {
 
   Future<StatusAnimeResponse> getCompletedAnime(int page) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/completed'));
+      final response =
+          await http.get(Uri.parse('$baseUrl/completed?page=$page'));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonData = jsonDecode(response.body);
         return StatusAnimeResponse.fromJson(jsonData);
+      } else if (response.statusCode == 404) {
+        return StatusAnimeResponse(
+          animeList: [], // List kosong
+          pagination: Pagination(
+            currentPage: page,
+            hasPrevPage: page > 1,
+            prevPage: page > 1 ? page - 1 : null,
+            hasNextPage: false,
+            nextPage: null,
+            totalPages: page,
+          ),
+        );
       } else {
         throw Exception(
             'Gagal memuat data. Status Code: ${response.statusCode}\nBody: ${response.body}');

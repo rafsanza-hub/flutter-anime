@@ -6,7 +6,8 @@ class AnimeGenreRepository {
 
   AnimeGenreRepository({required this.animeGenreService});
 
-  Future<List<Anime>> fetchAnimeList(String genreId) async {
-    return await animeGenreService.fetchAnimeList(genreId);
+  Future<AnimeGenreResponse> fetchAnimeList(String genreId,
+      {int page = 1}) async {
+    return await animeGenreService.fetchAnimeList(genreId, page: page);
   }
 }

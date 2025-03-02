@@ -65,7 +65,7 @@ class OngoingAnime extends Anime {
     return OngoingAnime(
       title: json['title'],
       poster: json['poster'],
-      episodes: json['episodes'],
+      episodes: json['episodes'] ?? 0,
       releaseDay: json['releaseDay'],
       latestReleaseDate: json['latestReleaseDate'],
       lastReleaseDate: json['lastReleaseDate'],
@@ -98,14 +98,14 @@ class CompletedAnime extends Anime {
 
   factory CompletedAnime.fromJson(Map<String, dynamic> json) {
     return CompletedAnime(
-      title: json['title'],
-      poster: json['poster'],
-      episodes: json['episodes'],
-      lastReleaseDate: json['lastReleaseDate'],
-      animeId: json['animeId'],
-      href: json['href'],
-      otakudesuUrl: json['otakudesuUrl'],
-      score: json['score'],
+      title: json['title'] ?? '',
+      poster: json['poster'] ?? '',
+      episodes: json['episodes'] ?? 0,
+      lastReleaseDate: json['lastReleaseDate'] ?? '',
+      animeId: json['animeId'] ?? '',
+      href: json['href'] ?? '',
+      otakudesuUrl: json['otakudesuUrl'] ?? '',
+      score: json['score'] ?? '',
     );
   }
 
@@ -113,8 +113,6 @@ class CompletedAnime extends Anime {
     return json.map((anime) => CompletedAnime.fromJson(anime)).toList();
   }
 }
-
-
 
 class SearchAnime extends Anime {
   final String status;
@@ -129,7 +127,7 @@ class SearchAnime extends Anime {
     required super.otakudesuUrl,
     required this.genreList,
     super.score,
-  }) : super(episodes: 0); 
+  }) : super(episodes: 0);
 
   factory SearchAnime.fromJson(Map<String, dynamic> json) {
     return SearchAnime(

@@ -1,6 +1,6 @@
 import '../../anime/models/anime_model.dart';
 
-class StatusAnimeResponse {
+class StatusAnimeResponse { 
   final List<OngoingAnime> animeList;
   final Pagination pagination;
 

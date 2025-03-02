@@ -16,12 +16,47 @@ class AnimeGenreScreen extends StatefulWidget {
 }
 
 class _AnimeGenreScreenState extends State<AnimeGenreScreen> {
+  final ScrollController _scrollController = ScrollController();
+  late final AnimeGenreBloc animeGenreBloc;
+  int currentPage = 1;
+  bool isLoadingMore = false;
+
   @override
   void initState() {
     super.initState();
-    context
-        .read<AnimeGenreBloc>()
-        .add(FetchAnimeGenreEvent(genreId: widget.genreId));
+    animeGenreBloc = context.read<AnimeGenreBloc>();
+    animeGenreBloc
+        .add(FetchAnimeGenreEvent(genreId: widget.genreId, page: currentPage));
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_isBottom && !isLoadingMore) {
+      _loadMore();
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  void _loadMore() {
+    if (isLoadingMore) return;
+    setState(() {
+      isLoadingMore = true;
+    });
+    currentPage++;
+    animeGenreBloc
+        .add(FetchAnimeGenreEvent(genreId: widget.genreId, page: currentPage));
   }
 
   @override
@@ -30,54 +65,103 @@ class _AnimeGenreScreenState extends State<AnimeGenreScreen> {
       appBar: AppBar(
         title: const Text('Anime by Genre'),
       ),
-      body: BlocBuilder<AnimeGenreBloc, AnimeGenreState>(
+      body: BlocConsumer<AnimeGenreBloc, AnimeGenreState>(
+        listener: (context, state) {
+          if (state is AnimeGenreLoaded) {
+            setState(() {
+              isLoadingMore = false;
+            });
+          }
+        },
         builder: (context, state) {
-          if (state is AnimeGenreLoading) {
+          if (state is AnimeGenreLoading && currentPage == 1) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is AnimeGenreLoaded) {
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: state.animeList.length,
-              itemBuilder: (context, index) {
-                final anime = state.animeList[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AnimeDetailScreen(
-                            animeId: anime.animeId,
-                          ),
-                        ),
-                      );
-                    },
-                    child: _buildAnimeCard(anime),
-                  ),
-                );
+            final animeList = state.response.animeList;
+            final pagination = state.response.pagination;
+
+            if (animeList.isEmpty) {
+              return const Center(
+                child: Text(
+                  'Tidak ada anime untuk genre ini',
+                  style: TextStyle(color: Colors.white54),
+                ),
+              );
+            }
+
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {
+                  currentPage = 1;
+                  isLoadingMore = false;
+                });
+                animeGenreBloc.add(FetchAnimeGenreEvent(
+                    genreId: widget.genreId, page: currentPage));
               },
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(16),
+                itemCount: animeList.length + (pagination.hasNextPage ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == animeList.length) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  final anime = animeList[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AnimeDetailScreen(
+                              animeId: anime.animeId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: _buildAnimeCard(anime),
+                    ),
+                  );
+                },
+              ),
             );
           } else if (state is AnimeGenreError) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Error: ${state.message}'),
+                  Text(
+                    state.message,
+                    style: const TextStyle(color: Colors.white54),
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      context.read<AnimeGenreBloc>().add(
-                            FetchAnimeGenreEvent(genreId: widget.genreId),
-                          );
+                      setState(() {
+                        currentPage = 1;
+                        isLoadingMore = false;
+                      });
+                      animeGenreBloc.add(FetchAnimeGenreEvent(
+                          genreId: widget.genreId, page: currentPage));
                     },
-                    child: const Text('Retry'),
+                    child: const Text('Coba Lagi'),
                   ),
                 ],
               ),
             );
           }
-          return Container();
+          return const Center(
+            child: Text(
+              'Ada Kesalahan',
+              style: TextStyle(color: Colors.white54),
+            ),
+          );
         },
       ),
     );
@@ -136,7 +220,6 @@ class _AnimeGenreScreenState extends State<AnimeGenreScreen> {
                   _buildInfoText('Episode', anime.episodes.toString()),
                 const SizedBox(height: 4),
                 _buildInfoText('Studio', anime.studios),
-                const SizedBox(height: 4),
                 const SizedBox(height: 4),
                 _buildInfoText('Musim', anime.season),
               ],

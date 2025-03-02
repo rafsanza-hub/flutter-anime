@@ -12,12 +12,45 @@ class MoreOngoingScreen extends StatefulWidget {
 }
 
 class _MoreOngoingScreenState extends State<MoreOngoingScreen> {
+  final ScrollController _scrollController = ScrollController();
+  late final OngoingBloc ongoingBloc;
   int currentPage = 1;
+  bool isLoadingMore = false;
 
   @override
   void initState() {
     super.initState();
-    context.read<OngoingBloc>().add(FetchOngoingAnimeEvent(page: currentPage));
+    ongoingBloc = context.read<OngoingBloc>();
+    ongoingBloc.add(FetchOngoingAnimeEvent(page: currentPage));
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_isBottom && !isLoadingMore) {
+      _loadMore();
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
+
+  void _loadMore() {
+    if (isLoadingMore) return;
+    setState(() {
+      isLoadingMore = true;
+    });
+    currentPage++;
+    ongoingBloc.add(FetchOngoingAnimeEvent(page: currentPage));
   }
 
   @override
@@ -26,79 +59,102 @@ class _MoreOngoingScreenState extends State<MoreOngoingScreen> {
       appBar: AppBar(
         title: const Text('Lagi ongoing'),
       ),
-      body: BlocBuilder<OngoingBloc, OngoingState>(
+      body: BlocConsumer<OngoingBloc, OngoingState>(
+        listener: (context, state) {
+          if (state is OngoingLoadedState) {
+            setState(() {
+              isLoadingMore = false;
+            });
+          }
+        },
         builder: (context, state) {
-          if (state is OngoingLoadingState) {
+          if (state is OngoingLoadingState && currentPage == 1) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is OngoingLoadedState) {
             final ongoingAnimeList = state.ongoingAnimeResponse.animeList;
             final pagination = state.ongoingAnimeResponse.pagination;
 
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: ongoingAnimeList.length,
-                    itemBuilder: (context, index) {
-                      final anime = ongoingAnimeList[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      AnimeDetailScreen(animeId: anime.animeId),
-                                ),
-                              );
-                            },
-                            child: OngoingCard(
-                              anime: anime,
-                            )),
-                      );
-                    },
-                  ),
+            if (ongoingAnimeList.isEmpty) {
+              return const Center(
+                child: Text(
+                  'Tidak ada anime ongoing',
+                  style: TextStyle(color: Colors.white54),
                 ),
-                if (pagination.hasNextPage || pagination.hasPrevPage)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (pagination.hasPrevPage)
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                currentPage = pagination.prevPage!;
-                              });
-                              context.read<OngoingBloc>().add(
-                                  FetchOngoingAnimeEvent(page: currentPage));
-                            },
-                            child: const Text('Previous'),
+              );
+            }
+
+            return RefreshIndicator(
+              onRefresh: () async {
+                setState(() {
+                  currentPage = 1;
+                  isLoadingMore = false;
+                });
+                ongoingBloc.add(FetchOngoingAnimeEvent(page: currentPage));
+              },
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(16),
+                itemCount:
+                    ongoingAnimeList.length + (pagination.hasNextPage ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == ongoingAnimeList.length) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  final anime = ongoingAnimeList[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                AnimeDetailScreen(animeId: anime.animeId),
                           ),
-                        if (pagination.hasNextPage)
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                currentPage = pagination.nextPage!;
-                              });
-                              context.read<OngoingBloc>().add(
-                                  FetchOngoingAnimeEvent(page: currentPage));
-                            },
-                            child: const Text('Next'),
-                          ),
-                      ],
+                        );
+                      },
+                      child: OngoingCard(anime: anime),
                     ),
-                  ),
-              ],
+                  );
+                },
+              ),
             );
           } else if (state is OngoingErrorState) {
-            return Center(child: Text(state.message));
-          } else {
-            return const Center(child: Text('Ada Kesalahan'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    state.message,
+                    style: const TextStyle(color: Colors.white54),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        currentPage = 1;
+                        isLoadingMore = false;
+                      });
+                      ongoingBloc
+                          .add(FetchOngoingAnimeEvent(page: currentPage));
+                    },
+                    child: const Text('Coba Lagi'),
+                  ),
+                ],
+              ),
+            );
           }
+          return const Center(
+            child: Text(
+              'Ada Kesalahan',
+              style: TextStyle(color: Colors.white54),
+            ),
+          );
         },
       ),
     );
