@@ -125,7 +125,7 @@ class AnimeCardsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle(context, "Terakhir dilihat"),
+        // _buildSectionTitle(context, "Terakhir dilihat"),
         _buildHistorySection(context),
         _buildSectionTitle(context, "Ongoing"),
         Padding(
@@ -182,7 +182,7 @@ class AnimeCardsSection extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.1),
+                        Colors.black.withOpacity(0.3),
                         Colors.black.withOpacity(0.7),
                       ],
                     ),
@@ -192,6 +192,14 @@ class AnimeCardsSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      const Text(
+                        "Terakhir dilihat",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
                       Text(
                         entry.title,
                         style: const TextStyle(
